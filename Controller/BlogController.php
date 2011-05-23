@@ -15,7 +15,8 @@ class BlogController extends Controller
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
         $query = $entityManager->createQuery(
-            'SELECT p FROM PSS\Bundle\BlogBundle\Entity\Post p
+            'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
+             INNER JOIN p.author a
              WHERE p.type = \'post\' AND p.status = \'publish\'
              ORDER BY p.publishedAt DESC'
         );

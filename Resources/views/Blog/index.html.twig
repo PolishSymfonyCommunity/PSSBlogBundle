@@ -9,6 +9,9 @@
         {% else %}
             {{ post.content | autop | raw }}
         {% endif %}
+        <div class="post-meta">
+            {% trans with { '%date%': post.publishedAt | date('d M Y'), '%author%': post.author.displayName } %}Posted on %date% by %author%{% endtrans %}
+        </div>
     {% endfor %}
 {% endblock %}
 

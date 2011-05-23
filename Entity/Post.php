@@ -207,6 +207,14 @@ class Post
     private $termRelationships;
 
     /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
      * @return string
      */
     public function getContent()
@@ -220,6 +228,14 @@ class Post
     public function getExcerpt()
     {
         return $this->excerpt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
     }
 
     /**

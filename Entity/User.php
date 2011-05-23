@@ -105,4 +105,12 @@ class User
      * @ORM\JoinColumn(name="ID", referencedColumnName="user_id")
      */
     private $meta;
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
 }
