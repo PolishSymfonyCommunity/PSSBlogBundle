@@ -225,6 +225,14 @@ class Post
     /**
      * @return string
      */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
