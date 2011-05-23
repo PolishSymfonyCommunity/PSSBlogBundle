@@ -3,5 +3,5 @@
 {% block content %}
     <h1>{{ post.title }}</h1>
 
-    {{ post.content | raw }}
+    {{ post.content | autop | raw }}
 {% endblock %}
