@@ -8,7 +8,7 @@ class PostRepository extends EntityRepository
 {
     /**
      * @param integer $max
-     * @return Doctrine\ORM\Query
+     * @return array
      */
     public function findPublishedPosts($max = 3)
     {
@@ -26,7 +26,7 @@ class PostRepository extends EntityRepository
 
     /**
      * @param string $slug
-     * @return Doctrine\ORM\Query
+     * @return PSS\Bundle\BlogBundle\Entity\Post
      */
     public function findPublishedPostOrPage($slug)
     {
