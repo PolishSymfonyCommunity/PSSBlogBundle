@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="wp_posts")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PSS\Bundle\BlogBundle\Repository\PostRepository")
  */
 class Post
 {

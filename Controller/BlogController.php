@@ -14,15 +14,9 @@ class BlogController extends Controller
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $query = $entityManager->createQuery(
-            'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
-             INNER JOIN p.author a
-             WHERE p.type = \'post\' AND p.status = \'publish\'
-             ORDER BY p.publishedAt DESC'
-        );
-        $query->setMaxResults(3);
-
-        $posts = $query->getResult();
+        $posts = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+            ->findPublishedPosts();
 
         return $this->render('PSSBlogBundle:Blog:index.html.twig', array('posts' => $posts));
     }
@@ -34,16 +28,10 @@ class BlogController extends Controller
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $query = $entityManager->createQuery(
-            'SELECT p FROM PSS\Bundle\BlogBundle\Entity\Post p
-             WHERE p.slug = :slug
-             AND p.status = \'publish\'
-             AND p.type IN (\'post\', \'page\')'
-        );
-        $query->setParameter('slug', $slug);
-
         try {
-            $post = $query->getSingleResult();
+            $post = $entityManager
+                ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+                ->findPublishedPostOrPage($slug);
         } catch (\Doctrine\ORM\NoResultException $exception) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
         }
