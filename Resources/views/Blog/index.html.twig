@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+    {% for post in posts %}
+        <h2>{{ post.title }}</h2>
+
+        <p>
+            {% if post.excerpt %}
+                {{ post.excerpt | raw }}
+            {% else %}
+                {{ post.content | raw }}
+            {% endif %}
+        </p>
+    {% endfor %}
+{% endblock %}
+
