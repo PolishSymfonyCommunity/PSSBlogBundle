@@ -38,4 +38,15 @@ class BlogController extends Controller
 
         return $this->render('PSSBlogBundle:Blog:show.html.twig', array('post' => $post));
     }
+	
+	public function recentPostsAction($max)
+	{
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $posts = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+            ->findPublishedPosts($max);
+
+        return $this->render('PSSBlogBundle:Blog:recentPosts.html.twig', array('posts' => $posts));		
+	}
 }
