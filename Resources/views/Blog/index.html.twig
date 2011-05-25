@@ -15,3 +15,6 @@
     {% endfor %}
 {% endblock %}
 
+{% block sidebar %}
+    {% render 'PSSBlogBundle:Blog:recentPosts' with {'max': 5} %}
+{% endblock %}
