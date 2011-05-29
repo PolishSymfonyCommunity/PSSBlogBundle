@@ -23,7 +23,6 @@ Feature: Listing blog posts
       And I should see "Nginx configuration for Symfony projects"
       But I should not see "Nginx configuration for Symfony projects revision"
       And I should not see "Nginx configuration for Symfony projects draft"
-      And I should not see "Compiling doctrine in symfony 1.4"
       And I should not see "About"
       And I should see "Capifony is a collection of Capistrano deployment recipes."
       And I should see "<img class='alignleft size-full wp-image-749' title='Nginx and PHP' src='/uploads/wp/2011/05/nginx-php.png' alt='' width='349' height='125' />I already described<a title='Setting up a PHP development environment with nginx on Ubuntu 10.04' href='/setting-up-a-php-development-environment-with-nginx-on-ubuntu-1004'> how to prepare a PHP development environment with Nginx on Ubuntu 10.04</a>."

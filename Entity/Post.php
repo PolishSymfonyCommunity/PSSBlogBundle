@@ -205,7 +205,7 @@ class Post
      * @ORM\JoinColumn(name="ID", referencedColumnName="object_id")
      */
     private $termRelationships;
-
+ 
     /**
      * @return User
      */
