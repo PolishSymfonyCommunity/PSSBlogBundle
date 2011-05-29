@@ -56,13 +56,6 @@ class Post
     private $title;
 
     /**
-     * @var integer $category
-     *
-     * @ORM\Column(name="post_category", type="integer", nullable=false)
-     */
-    private $category;
-
-    /**
      * @var text $excerpt
      *
      * @ORM\Column(name="post_excerpt", type="text", nullable=false)

@@ -76,7 +76,6 @@ $steps->Given('/^site has blog posts:$/', function($world, $table) {
         $setPostPrivateProperty('excerpt', $row['excerpt']);
         $setPostPrivateProperty('content', $row['content']);
         $setPostPrivateProperty('author', $user);
-        $setPostPrivateProperty('category', '');
         $setPostPrivateProperty('commentStatus', '');
         $setPostPrivateProperty('pingStatus', '');
         $setPostPrivateProperty('password', '');
