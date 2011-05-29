@@ -25,6 +25,29 @@ class PostRepository extends EntityRepository
     }
 
     /**
+     * @param string $tagSlug
+     * @return array
+     */
+    public function findPublishedPostsByTag($tagSlug)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
+             INNER JOIN p.author a
+             INNER JOIN p.termRelationships tr
+             INNER JOIN tr.termTaxonomy tt
+             INNER JOIN tt.term t
+             WHERE p.type = \'post\'
+               AND p.status = \'publish\'
+               AND tt.taxonomy = \'post_tag\'
+               AND t.slug = :slug
+             ORDER BY p.publishedAt DESC'
+        )
+        ->setParameter('slug', $tagSlug);
+
+        return $query->getResult();
+    }
+
+    /**
      * @param string $slug
      * @return PSS\Bundle\BlogBundle\Entity\Post
      */

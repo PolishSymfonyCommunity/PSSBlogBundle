@@ -1,0 +1,12 @@
+{% for post in posts %}
+    <h2><a href="{{ path('blog_show', {'slug': post.slug }) }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a></h2>
+
+    {% if post.excerpt %}
+        {{ post.excerpt | autop | raw }}
+    {% else %}
+        {{ post.content | autop | raw }}
+    {% endif %}
+    <div class="post-meta">
+        {% trans with { '%date%': post.publishedAt | date('d M Y'), '%author%': post.author.displayName } %}Posted on %date% by %author%{% endtrans %}
+    </div>
+{% endfor %}

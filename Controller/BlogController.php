@@ -22,6 +22,24 @@ class BlogController extends Controller
     }
 
     /**
+     * @Route("/tag/{tag}", name="blog_posts_by_tag")
+     */
+    public function postsByTagAction($tag)
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $posts = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+            ->findPublishedPostsByTag($tag);
+
+        if (!$posts) {
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
+        }
+
+        return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('posts' => $posts));
+    }
+
+    /**
      * @Route("/{slug}", name="blog_show")
      */
     public function showAction($slug)
@@ -38,15 +56,15 @@ class BlogController extends Controller
 
         return $this->render('PSSBlogBundle:Blog:show.html.twig', array('post' => $post));
     }
-	
-	public function recentPostsAction($max)
-	{
+
+    public function recentPostsAction($max)
+    {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
         $posts = $entityManager
             ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
             ->findPublishedPosts($max);
 
-        return $this->render('PSSBlogBundle:Blog:recentPosts.html.twig', array('posts' => $posts));		
-	}
+        return $this->render('PSSBlogBundle:Blog:recentPosts.html.twig', array('posts' => $posts));
+    }
 }
