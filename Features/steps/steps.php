@@ -3,13 +3,15 @@
 // We don't want to add setters just because we need them in tests.
 // Also, we want to set raw data. This copies the way Doctrine's loading
 // fixtures.
-function setPrivateProperty($propertyName, $value, $reflection, $object) {
+function setPrivateProperty ($object, $propertyName, $value) {
+    $reflection = new ReflectionObject($object);
     $property = $reflection->getProperty($propertyName);
     $property->setAccessible(true);
     $property->setValue($object, $value);
 };
 
-function getPrivateProperty($propertyName, $reflection, $object) {
+function getPrivateProperty ($object, $propertyName) {
+    $reflection = new ReflectionObject($object);
     $property = $reflection->getProperty($propertyName);
     $property->setAccessible(true);
 
@@ -20,28 +22,18 @@ $steps->Given('/^site has users:$/', function ($world, $table) {
     $container = $world->getKernel()->getContainer();
     $entityManager = $container->get('doctrine.orm.entity_manager');
 
-    if (!isset($world->users)) {
-        $world->users = array();
-    }
-
     foreach ($table->getHash() as $row) {
         $user = new PSS\Bundle\BlogBundle\Entity\User();
 
-        $userReflection = new ReflectionObject($user);
-
-        $setUserPrivateProperty = function($propertyName, $value) use ($userReflection, $user) {
-            setPrivateProperty($propertyName, $value, $userReflection, $user);
-        };
-
-        $setUserPrivateProperty('login', $row['login']);
-        $setUserPrivateProperty('password', $row['password']);
-        $setUserPrivateProperty('niceName', $row['login']);
-        $setUserPrivateProperty('email', $row['email']);
-        $setUserPrivateProperty('url', $row['url']);
-        $setUserPrivateProperty('registeredAt', new DateTime('now'));
-        $setUserPrivateProperty('activationKey', 'key121212');
-        $setUserPrivateProperty('status', 0);
-        $setUserPrivateProperty('displayName', $row['display_name']);
+        setPrivateProperty($user, 'login', $row['login']);
+        setPrivateProperty($user, 'password', $row['password']);
+        setPrivateProperty($user, 'niceName', $row['login']);
+        setPrivateProperty($user, 'email', $row['email']);
+        setPrivateProperty($user, 'url', $row['url']);
+        setPrivateProperty($user, 'registeredAt', new DateTime('now'));
+        setPrivateProperty($user, 'activationKey', 'key121212');
+        setPrivateProperty($user, 'status', 0);
+        setPrivateProperty($user, 'displayName', $row['display_name']);
 
         $entityManager->persist($user);
 
@@ -51,46 +43,37 @@ $steps->Given('/^site has users:$/', function ($world, $table) {
     $entityManager->flush();
 });
 
-$steps->Given('/^site has blog posts:$/', function($world, $table) use($steps) {
+$steps->Given('/^site has blog posts:$/', function ($world, $table) use ($steps) {
     $container = $world->getKernel()->getContainer();
     $entityManager = $container->get('doctrine.orm.entity_manager');
-
-    if (!isset($world->posts)) {
-        $world->posts = array();
-    }
 
     foreach ($table->getHash() as $row) {
         $post = new PSS\Bundle\BlogBundle\Entity\Post();
         $user = $world->users[$row['user_login']];
 
-        $postReflection = new ReflectionObject($post);
+        setPrivateProperty($post, 'title', $row['title']);
+        setPrivateProperty($post, 'slug', $row['slug']);
+        setPrivateProperty($post, 'type', $row['type']);
+        setPrivateProperty($post, 'status', $row['status']);
+        setPrivateProperty($post, 'publishedAt', new DateTime($row['published_at']));
+        setPrivateProperty($post, 'publishedAtAsGmt', new DateTime($row['published_at']));
+        setPrivateProperty($post, 'modifiedAt', new DateTime($row['published_at']));
+        setPrivateProperty($post, 'modifiedAtAsGmt', new DateTime($row['published_at']));
+        setPrivateProperty($post, 'excerpt', $row['excerpt']);
+        setPrivateProperty($post, 'content', $row['content']);
+        setPrivateProperty($post, 'author', $user);
+        setPrivateProperty($post, 'commentStatus', '');
+        setPrivateProperty($post, 'pingStatus', '');
+        setPrivateProperty($post, 'password', '');
+        setPrivateProperty($post, 'toPing', '');
+        setPrivateProperty($post, 'pinged', '');
+        setPrivateProperty($post, 'contentFiltered', '');
+        setPrivateProperty($post, 'parentId', 0);
+        setPrivateProperty($post, 'guid', '');
+        setPrivateProperty($post, 'menuOrder', '');
+        setPrivateProperty($post, 'mimeType', '');
+        setPrivateProperty($post, 'commentCount', '');
 
-        $setPostPrivateProperty = function($propertyName, $value) use ($postReflection, $post) {
-            setPrivateProperty($propertyName, $value, $postReflection, $post);
-        };
-
-        $setPostPrivateProperty('title', $row['title']);
-        $setPostPrivateProperty('slug', $row['slug']);
-        $setPostPrivateProperty('type', $row['type']);
-        $setPostPrivateProperty('status', $row['status']);
-        $setPostPrivateProperty('publishedAt', new DateTime($row['published_at']));
-        $setPostPrivateProperty('publishedAtAsGmt', new DateTime($row['published_at']));
-        $setPostPrivateProperty('modifiedAt', new DateTime($row['published_at']));
-        $setPostPrivateProperty('modifiedAtAsGmt', new DateTime($row['published_at']));
-        $setPostPrivateProperty('excerpt', $row['excerpt']);
-        $setPostPrivateProperty('content', $row['content']);
-        $setPostPrivateProperty('author', $user);
-        $setPostPrivateProperty('commentStatus', '');
-        $setPostPrivateProperty('pingStatus', '');
-        $setPostPrivateProperty('password', '');
-        $setPostPrivateProperty('toPing', '');
-        $setPostPrivateProperty('pinged', '');
-        $setPostPrivateProperty('contentFiltered', '');
-        $setPostPrivateProperty('parentId', 0);
-        $setPostPrivateProperty('guid', '');
-        $setPostPrivateProperty('menuOrder', '');
-        $setPostPrivateProperty('mimeType', '');
-        $setPostPrivateProperty('commentCount', '');
         $entityManager->persist($post);
         $entityManager->flush();
 
@@ -100,105 +83,62 @@ $steps->Given('/^site has blog posts:$/', function($world, $table) use($steps) {
             $steps->Given(sprintf('the blog post "%s" is tagged with keywords:', $row['title']), $world, $row['tags']);
         }
     }
-
-    $entityManager->flush();
 });
 
-$steps->Given('/^the blog post "(.*?)" is tagged with keywords:$/', function($world, $postTitle, $tags) {
-    $container = $world->getKernel()->getContainer();
-    $entityManager = $container->get('doctrine.orm.entity_manager');
-    $post = $world->posts[$postTitle];
-    $postReflection = new ReflectionObject($post);
-
-    if (!isset($world->tags)) {
-        $world->tags = array();
-    }
-
+$steps->Given('/^the blog post "(.*?)" is tagged with keywords:$/', function ($world, $postTitle, $tags) use ($steps) {
     $tags = explode(',', trim($tags));
 
     if (!empty($tags)) {
         foreach ($tags as $tagName) {
-            if (!isset($world->tags[$tagName])) {
-                $tag = new PSS\Bundle\BlogBundle\Entity\Term();
-                $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
-                $tagReflection = new ReflectionObject($tag);
-                $taxonomyReflection = new ReflectionObject($taxonomy);
-
-                $setTagPrivateProperty = function($propertyName, $value) use ($tagReflection, $tag) {
-                    setPrivateProperty($propertyName, $value, $tagReflection, $tag);
-                };
-
-                $setTaxonomyPrivateProperty = function($propertyName, $value) use ($taxonomyReflection, $taxonomy) {
-                    setPrivateProperty($propertyName, $value, $taxonomyReflection, $taxonomy);
-                };
-
-                $setTaxonomyPrivateProperty('taxonomy', 'post_tag');
-                $setTaxonomyPrivateProperty('description', '');
-                $setTaxonomyPrivateProperty('parentId', '0');
-                $setTaxonomyPrivateProperty('count', '1');
-                $setTagPrivateProperty('name', $tagName);
-                $setTagPrivateProperty('slug', $tagName);
-                $setTagPrivateProperty('group', 0);
-                $entityManager->persist($tag);
-
-                $setTaxonomyPrivateProperty('term', $tag);
-
-                $entityManager->persist($taxonomy);
-                $entityManager->flush();
-
-                $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
-                    return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
-                };
-
-                $world->tags[$tagName] = $tag;
-            } else {
-              $tag = $world->tags[$tagName];
-              $tagReflection = new ReflectionObject($tag);
-              $getTagPrivateProperty = function($propertyName) use ($tagReflection, $tag) {
-                  return getPrivateProperty($propertyName, $tagReflection, $tag);
-              };
-
-              $taxonomy = $entityManager->createQuery(
-                  'SELECT t FROM PSS\Bundle\BlogBundle\Entity\TermTaxonomy t
-                  WHERE t.termId = :termId'
-              )->setParameter('termId', $getTagPrivateProperty('id'))->getSingleResult();
-
-              $taxonomyReflection = new ReflectionObject($taxonomy);
-              $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
-                  return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
-              };
-            }
-
-            $getPostPrivateProperty = function($propertyName) use ($postReflection, $post) {
-                return getPrivateProperty($propertyName, $postReflection, $post);
-            };
-
-            $relation = new PSS\Bundle\BlogBundle\Entity\TermRelationship();
-            $relationReflection = new ReflectionObject($relation);
-            $setRelationPrivateProperty = function($propertyName, $value) use ($relationReflection, $relation) {
-                setPrivateProperty($propertyName, $value, $relationReflection, $relation);
-            };
-
-            try {
-                $entityManager->createQuery(
-                    'SELECT r FROM PSS\Bundle\BlogBundle\Entity\TermRelationship r
-                    WHERE r.objectId = :objectId AND r.termTaxonomyId = :termTaxonomyId'
-                )
-                ->setParameter('objectId', $getPostPrivateProperty('id'))
-                ->setParameter('termTaxonomyId', $getTaxonomyPrivateProperty('id'))
-                ->getSingleResult();
-            } catch (Doctrine\ORM\NoResultException $e) {
-                $setRelationPrivateProperty('post', $post);
-                $setRelationPrivateProperty('objectId', $getPostPrivateProperty('id'));
-                $setRelationPrivateProperty('termTaxonomy', $taxonomy);
-                $setRelationPrivateProperty('termTaxonomyId', $getTaxonomyPrivateProperty('id'));
-                $setRelationPrivateProperty('termOrder', '1');
-                $entityManager->persist($relation);
-                $entityManager->flush();
-            }
+            $steps->Given(sprintf('the blog post "%s" is tagged with "%s" keyword', $postTitle, $tagName), $world);
         }
     }
+});
 
+$steps->Given('/^the blog post "(.*?)" is tagged with "(.*?)" keyword$/', function ($world, $postTitle, $tagName) use ($steps) {
+    $container = $world->getKernel()->getContainer();
+    $entityManager = $container->get('doctrine.orm.entity_manager');
+
+    $steps->Given(sprintf('the site has "%s" tag', $tagName), $world);
+
+    $tag = $world->tags[$tagName];
+    $taxonomy = $world->taxonomies[$tagName];
+    $post = $world->posts[$postTitle];
+    $relation = new PSS\Bundle\BlogBundle\Entity\TermRelationship();
+
+    setPrivateProperty($relation, 'post', $post);
+    setPrivateProperty($relation, 'objectId', getPrivateProperty($post, 'id'));
+    setPrivateProperty($relation, 'termTaxonomy', $taxonomy);
+    setPrivateProperty($relation, 'termTaxonomyId', getPrivateProperty($taxonomy, 'id'));
+    setPrivateProperty($relation, 'termOrder', '1');
+
+    $entityManager->persist($relation);
     $entityManager->flush();
+});
+
+$steps->Given('/^the site has "(.*?)" tag$/', function ($world, $tagName) {
+    if (!isset($world->tags[$tagName])) {
+        $container = $world->getKernel()->getContainer();
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+
+        $tag = new PSS\Bundle\BlogBundle\Entity\Term();
+        $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
+
+        setPrivateProperty($taxonomy, 'taxonomy', 'post_tag');
+        setPrivateProperty($taxonomy, 'description', '');
+        setPrivateProperty($taxonomy, 'parentId', '0');
+        setPrivateProperty($taxonomy, 'count', '1');
+        setPrivateProperty($taxonomy, 'term', $tag);
+        setPrivateProperty($tag, 'name', $tagName);
+        setPrivateProperty($tag, 'slug', $tagName);
+        setPrivateProperty($tag, 'group', 0);
+
+        $entityManager->persist($tag);
+        $entityManager->persist($taxonomy);
+        $entityManager->flush();
+
+        $world->tags[$tagName] = $tag;
+        $world->taxonomies[$tagName] = $taxonomy;
+    }
 });
 

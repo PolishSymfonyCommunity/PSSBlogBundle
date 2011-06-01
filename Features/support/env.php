@@ -20,3 +20,8 @@ $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\Post')->execute
 $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\Term')->execute();
 $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\User')->execute();
 
+$world->users = array();
+$world->posts = array();
+$world->tags = array();
+$world->taxonomies = array();
+
