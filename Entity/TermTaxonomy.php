@@ -69,4 +69,12 @@ class TermTaxonomy
      * @ORM\JoinColumn(name="term_taxonomy_id", referencedColumnName="term_taxonomy_id")
      */
     private $termRelationships;
+
+    /**
+     * @return integer
+     */
+    public function getPostCount()
+    {
+        return $this->count;
+    }
 }

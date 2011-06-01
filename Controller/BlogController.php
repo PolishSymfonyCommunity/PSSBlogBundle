@@ -67,4 +67,18 @@ class BlogController extends Controller
 
         return $this->render('PSSBlogBundle:Blog:recentPosts.html.twig', array('posts' => $posts));
     }
+
+    public function tagCloudAction()
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $tags = $entityManager->createQuery(
+            'SELECT t, tt FROM PSS\Bundle\BlogBundle\Entity\Term t
+             INNER JOIN t.termTaxonomies tt
+             WHERE tt.count > 0 AND tt.taxonomy = \'post_tag\'
+             ORDER by t.name ASC'
+        )->getResult();
+
+        return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tags' => $tags));
+    }
 }

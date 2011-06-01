@@ -80,12 +80,16 @@ $steps->Given('/^site has blog posts:$/', function ($world, $table) use ($steps)
         $world->posts[$row['title']] = $post;
 
         if (isset($row['tags'])) {
-            $steps->Given(sprintf('the blog post "%s" is tagged with keywords:', $row['title']), $world, $row['tags']);
+            $steps->Given(sprintf('the blog post "%s" is tagged with "%s" keywords', $row['title'], $row['tags']), $world);
+        }
+
+        if (isset($row['categories'])) {
+            $steps->Given(sprintf('the blog post "%s" belongs to "%s" categories', $row['title'], $row['categories']), $world);
         }
     }
 });
 
-$steps->Given('/^the blog post "(.*?)" is tagged with keywords:$/', function ($world, $postTitle, $tags) use ($steps) {
+$steps->Given('/^the blog post "(.*?)" is tagged with "(.*?)" keywords$/', function ($world, $postTitle, $tags) use ($steps) {
     $tags = explode(',', trim($tags));
 
     if (!empty($tags)) {
@@ -95,16 +99,31 @@ $steps->Given('/^the blog post "(.*?)" is tagged with keywords:$/', function ($w
     }
 });
 
+$steps->Given('/^the blog post "(.*?)" belongs to "(.*?)" categories$/', function ($world, $postTitle, $categories) use ($steps) {
+    $categories = explode(',', trim($categories));
+
+    if (!empty($categories)) {
+        foreach ($categories as $categoryName) {
+            $steps->Given(sprintf('the blog post "%s" belongs to "%s" category', $postTitle, $categoryName), $world);
+        }
+    }
+});
+
 $steps->Given('/^the blog post "(.*?)" is tagged with "(.*?)" keyword$/', function ($world, $postTitle, $tagName) use ($steps) {
-    $container = $world->getKernel()->getContainer();
-    $entityManager = $container->get('doctrine.orm.entity_manager');
+    $steps->Given(sprintf('the blog post "%s" is labeled with "%s" post_tag', $postTitle, $tagName), $world);
+});
 
-    $steps->Given(sprintf('the site has "%s" tag', $tagName), $world);
+$steps->Given('/^the blog post "(.*?)" belongs to "(.*?)" category$/', function ($world, $postTitle, $categoryName) use ($steps) {
+    $steps->Given(sprintf('the blog post "%s" is labeled with "%s" category', $postTitle, $categoryName), $world);
+});
 
-    $tag = $world->tags[$tagName];
-    $taxonomy = $world->taxonomies[$tagName];
+$steps->Given('/^the blog post "(.*?)" is labeled with "(.*?)" (.*?)$/', function ($world, $postTitle, $termName, $taxonomyName) use ($steps) {
+    $steps->Given(sprintf('site has "%s" term which is a "%s" taxonomy', $termName, $taxonomyName), $world);
+
+    $taxonomy = $world->taxonomies[$taxonomyName][$termName];
     $post = $world->posts[$postTitle];
     $relation = new PSS\Bundle\BlogBundle\Entity\TermRelationship();
+    $postCount = getPrivateProperty($taxonomy, 'count');
 
     setPrivateProperty($relation, 'post', $post);
     setPrivateProperty($relation, 'objectId', getPrivateProperty($post, 'id'));
@@ -112,33 +131,68 @@ $steps->Given('/^the blog post "(.*?)" is tagged with "(.*?)" keyword$/', functi
     setPrivateProperty($relation, 'termTaxonomyId', getPrivateProperty($taxonomy, 'id'));
     setPrivateProperty($relation, 'termOrder', '1');
 
+    if ('publish' == getPrivateProperty($post, 'status')) {
+        setPrivateProperty($taxonomy, 'count', ++$postCount);
+    }
+
+    $container = $world->getKernel()->getContainer();
+    $entityManager = $container->get('doctrine.orm.entity_manager');
+    $entityManager->persist($taxonomy);
     $entityManager->persist($relation);
     $entityManager->flush();
 });
 
-$steps->Given('/^the site has "(.*?)" tag$/', function ($world, $tagName) {
-    if (!isset($world->tags[$tagName])) {
-        $container = $world->getKernel()->getContainer();
-        $entityManager = $container->get('doctrine.orm.entity_manager');
 
-        $tag = new PSS\Bundle\BlogBundle\Entity\Term();
-        $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
-
-        setPrivateProperty($taxonomy, 'taxonomy', 'post_tag');
-        setPrivateProperty($taxonomy, 'description', '');
-        setPrivateProperty($taxonomy, 'parentId', '0');
-        setPrivateProperty($taxonomy, 'count', '1');
-        setPrivateProperty($taxonomy, 'term', $tag);
-        setPrivateProperty($tag, 'name', $tagName);
-        setPrivateProperty($tag, 'slug', $tagName);
-        setPrivateProperty($tag, 'group', 0);
-
-        $entityManager->persist($tag);
-        $entityManager->persist($taxonomy);
-        $entityManager->flush();
-
-        $world->tags[$tagName] = $tag;
-        $world->taxonomies[$tagName] = $taxonomy;
+$steps->Given('/^site has tags:$/', function ($world, $table) use ($steps) {
+    foreach ($table->getHash() as $row) {
+        $steps->Given(sprintf('site has "%s" tag', $row['tag']), $world);
     }
 });
 
+$steps->Given('/^site has categories:$/', function ($world, $table) use ($steps) {
+    foreach ($table->getHash() as $row) {
+        $steps->Given(sprintf('site has "%s" category', $row['tag']), $world);
+    }
+});
+
+$steps->Given('/^site has "(.*?)" tag$/', function ($world, $tagName) use ($steps) {
+    $steps->Given(sprintf('site has "%s" term which is a "post_tag" taxonomy', $tagName), $world);
+});
+
+$steps->Given('/^site has "(.*?)" category$/', function ($world, $tagName) use ($steps) {
+    $steps->Given(sprintf('site has "%s" term which is a "category" taxonomy', $tagName), $world);
+});
+
+$steps->Given('/^site has "(.*?)" term which is a "(.*?)" taxonomy$/', function ($world, $termName, $taxonomyName) {
+    $container = $world->getKernel()->getContainer();
+    $entityManager = $container->get('doctrine.orm.entity_manager');
+
+    if (!isset($world->terms[$termName])) {
+        $term = new PSS\Bundle\BlogBundle\Entity\Term();
+
+        setPrivateProperty($term, 'name', $termName);
+        setPrivateProperty($term, 'slug', $termName);
+        setPrivateProperty($term, 'group', 0);
+
+        $entityManager->persist($term);
+
+        $world->terms[$termName] = $term;
+    }
+
+    if (!isset($world->taxonomies[$taxonomyName][$termName])) {
+        $term = $world->terms[$termName];
+        $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
+
+        setPrivateProperty($taxonomy, 'taxonomy', $taxonomyName);
+        setPrivateProperty($taxonomy, 'description', '');
+        setPrivateProperty($taxonomy, 'parentId', 0);
+        setPrivateProperty($taxonomy, 'count', 0);
+        setPrivateProperty($taxonomy, 'term', $term);
+
+        $entityManager->persist($taxonomy);
+
+        $world->taxonomies[$taxonomyName][$termName] = $taxonomy;
+    }
+
+    $entityManager->flush();
+});

@@ -47,4 +47,34 @@ class Term
      * @ORM\JoinColumn(name="term_id", referencedColumnName="term_id")
      */
     private $termTaxonomies;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPostCount()
+    {
+        if (is_null($this->termTaxonomies) || $this->termTaxonomies->isEmpty()) {
+            return 0;
+        }
+
+        $termTaxonomy = $this->termTaxonomies->first();
+
+        return $termTaxonomy->getPostCount();
+    }
 }
