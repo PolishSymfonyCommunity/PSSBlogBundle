@@ -51,9 +51,13 @@ $steps->Given('/^site has users:$/', function ($world, $table) {
     $entityManager->flush();
 });
 
-$steps->Given('/^site has blog posts:$/', function($world, $table) {
+$steps->Given('/^site has blog posts:$/', function($world, $table) use($steps) {
     $container = $world->getKernel()->getContainer();
     $entityManager = $container->get('doctrine.orm.entity_manager');
+
+    if (!isset($world->posts)) {
+        $world->posts = array();
+    }
 
     foreach ($table->getHash() as $row) {
         $post = new PSS\Bundle\BlogBundle\Entity\Post();
@@ -90,93 +94,107 @@ $steps->Given('/^site has blog posts:$/', function($world, $table) {
         $entityManager->persist($post);
         $entityManager->flush();
 
-        $tags = array();
+        $world->posts[$row['title']] = $post;
+
         if (isset($row['tags'])) {
-            $tags = explode(',', trim($row['tags']));
+            $steps->Given(sprintf('the blog post "%s" is tagged with keywords:', $row['title']), $world, $row['tags']);
         }
-        if (!isset($world->tags)) {
-            $world->tags = array();
-        }
-        if ($tags) {
-            foreach ($tags as $tagName) {
-                if (!isset($world->tags[$tagName])) {
-                    $tag = new PSS\Bundle\BlogBundle\Entity\Term();
-                    $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
-                    $tagReflection = new ReflectionObject($tag);
-                    $taxonomyReflection = new ReflectionObject($taxonomy);
+    }
 
-                    $setTagPrivateProperty = function($propertyName, $value) use ($tagReflection, $tag) {
-                        setPrivateProperty($propertyName, $value, $tagReflection, $tag);
-                    };
+    $entityManager->flush();
+});
 
-                    $setTaxonomyPrivateProperty = function($propertyName, $value) use ($taxonomyReflection, $taxonomy) {
-                        setPrivateProperty($propertyName, $value, $taxonomyReflection, $taxonomy);
-                    };
+$steps->Given('/^the blog post "(.*?)" is tagged with keywords:$/', function($world, $postTitle, $tags) {
+    $container = $world->getKernel()->getContainer();
+    $entityManager = $container->get('doctrine.orm.entity_manager');
+    $post = $world->posts[$postTitle];
+    $postReflection = new ReflectionObject($post);
 
-                    $setTaxonomyPrivateProperty('taxonomy', 'post_tag');
-                    $setTaxonomyPrivateProperty('description', '');
-                    $setTaxonomyPrivateProperty('parentId', '0');
-                    $setTaxonomyPrivateProperty('count', '1');
-                    $setTagPrivateProperty('name', $tagName);
-                    $setTagPrivateProperty('slug', $tagName);
-                    $setTagPrivateProperty('group', 0);
-                    $entityManager->persist($tag);
+    if (!isset($world->tags)) {
+        $world->tags = array();
+    }
 
-                    $setTaxonomyPrivateProperty('term', $tag);
+    $tags = explode(',', trim($tags));
 
-                    $entityManager->persist($taxonomy);
-                    $entityManager->flush();
+    if (!empty($tags)) {
+        foreach ($tags as $tagName) {
+            if (!isset($world->tags[$tagName])) {
+                $tag = new PSS\Bundle\BlogBundle\Entity\Term();
+                $taxonomy = new PSS\Bundle\BlogBundle\Entity\TermTaxonomy();
+                $tagReflection = new ReflectionObject($tag);
+                $taxonomyReflection = new ReflectionObject($taxonomy);
 
-                    $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
-                        return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
-                    };
-
-                    $world->tags[$tagName] = $tag;
-                } else {
-                  $tag = $world->tags[$tagName];
-                  $tagReflection = new ReflectionObject($tag);
-                  $getTagPrivateProperty = function($propertyName) use ($tagReflection, $tag) {
-                      return getPrivateProperty($propertyName, $tagReflection, $tag);
-                  };
-
-                  $taxonomy = $entityManager->createQuery(
-                      'SELECT t FROM PSS\Bundle\BlogBundle\Entity\TermTaxonomy t
-                      WHERE t.termId = :termId'
-                  )->setParameter('termId', $getTagPrivateProperty('id'))->getSingleResult();
-
-                  $taxonomyReflection = new ReflectionObject($taxonomy);
-                  $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
-                      return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
-                  };
-                }
-
-                $getPostPrivateProperty = function($propertyName) use ($postReflection, $post) {
-                    return getPrivateProperty($propertyName, $postReflection, $post);
+                $setTagPrivateProperty = function($propertyName, $value) use ($tagReflection, $tag) {
+                    setPrivateProperty($propertyName, $value, $tagReflection, $tag);
                 };
 
-                $relation = new PSS\Bundle\BlogBundle\Entity\TermRelationship();
-                $relationReflection = new ReflectionObject($relation);
-                $setRelationPrivateProperty = function($propertyName, $value) use ($relationReflection, $relation) {
-                    setPrivateProperty($propertyName, $value, $relationReflection, $relation);
+                $setTaxonomyPrivateProperty = function($propertyName, $value) use ($taxonomyReflection, $taxonomy) {
+                    setPrivateProperty($propertyName, $value, $taxonomyReflection, $taxonomy);
                 };
 
-                try {
-                    $entityManager->createQuery(
-                        'SELECT r FROM PSS\Bundle\BlogBundle\Entity\TermRelationship r
-                        WHERE r.objectId = :objectId AND r.termTaxonomyId = :termTaxonomyId'
-                    )
-                    ->setParameter('objectId', $getPostPrivateProperty('id'))
-                    ->setParameter('termTaxonomyId', $getTaxonomyPrivateProperty('id'))
-                    ->getSingleResult();
-                } catch (Doctrine\ORM\NoResultException $e) {
-                    $setRelationPrivateProperty('post', $post);
-                    $setRelationPrivateProperty('objectId', $getPostPrivateProperty('id'));
-                    $setRelationPrivateProperty('termTaxonomy', $taxonomy);
-                    $setRelationPrivateProperty('termTaxonomyId', $getTaxonomyPrivateProperty('id'));
-                    $setRelationPrivateProperty('termOrder', '1');
-                    $entityManager->persist($relation);
-                    $entityManager->flush();
-                }
+                $setTaxonomyPrivateProperty('taxonomy', 'post_tag');
+                $setTaxonomyPrivateProperty('description', '');
+                $setTaxonomyPrivateProperty('parentId', '0');
+                $setTaxonomyPrivateProperty('count', '1');
+                $setTagPrivateProperty('name', $tagName);
+                $setTagPrivateProperty('slug', $tagName);
+                $setTagPrivateProperty('group', 0);
+                $entityManager->persist($tag);
+
+                $setTaxonomyPrivateProperty('term', $tag);
+
+                $entityManager->persist($taxonomy);
+                $entityManager->flush();
+
+                $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
+                    return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
+                };
+
+                $world->tags[$tagName] = $tag;
+            } else {
+              $tag = $world->tags[$tagName];
+              $tagReflection = new ReflectionObject($tag);
+              $getTagPrivateProperty = function($propertyName) use ($tagReflection, $tag) {
+                  return getPrivateProperty($propertyName, $tagReflection, $tag);
+              };
+
+              $taxonomy = $entityManager->createQuery(
+                  'SELECT t FROM PSS\Bundle\BlogBundle\Entity\TermTaxonomy t
+                  WHERE t.termId = :termId'
+              )->setParameter('termId', $getTagPrivateProperty('id'))->getSingleResult();
+
+              $taxonomyReflection = new ReflectionObject($taxonomy);
+              $getTaxonomyPrivateProperty = function($propertyName) use ($taxonomyReflection, $taxonomy) {
+                  return getPrivateProperty($propertyName, $taxonomyReflection, $taxonomy);
+              };
+            }
+
+            $getPostPrivateProperty = function($propertyName) use ($postReflection, $post) {
+                return getPrivateProperty($propertyName, $postReflection, $post);
+            };
+
+            $relation = new PSS\Bundle\BlogBundle\Entity\TermRelationship();
+            $relationReflection = new ReflectionObject($relation);
+            $setRelationPrivateProperty = function($propertyName, $value) use ($relationReflection, $relation) {
+                setPrivateProperty($propertyName, $value, $relationReflection, $relation);
+            };
+
+            try {
+                $entityManager->createQuery(
+                    'SELECT r FROM PSS\Bundle\BlogBundle\Entity\TermRelationship r
+                    WHERE r.objectId = :objectId AND r.termTaxonomyId = :termTaxonomyId'
+                )
+                ->setParameter('objectId', $getPostPrivateProperty('id'))
+                ->setParameter('termTaxonomyId', $getTaxonomyPrivateProperty('id'))
+                ->getSingleResult();
+            } catch (Doctrine\ORM\NoResultException $e) {
+                $setRelationPrivateProperty('post', $post);
+                $setRelationPrivateProperty('objectId', $getPostPrivateProperty('id'));
+                $setRelationPrivateProperty('termTaxonomy', $taxonomy);
+                $setRelationPrivateProperty('termTaxonomyId', $getTaxonomyPrivateProperty('id'));
+                $setRelationPrivateProperty('termOrder', '1');
+                $entityManager->persist($relation);
+                $entityManager->flush();
             }
         }
     }
