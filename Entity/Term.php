@@ -3,6 +3,7 @@
 namespace PSS\Bundle\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 
 /**
  * @ORM\Table(name="wp_terms")
@@ -69,12 +70,24 @@ class Term
      */
     public function getPostCount()
     {
-        if (is_null($this->termTaxonomies) || $this->termTaxonomies->isEmpty()) {
-            return 0;
+        $termTaxonomy = $this->getPostTagTaxonomy();
+
+        return is_null($termTaxonomy) ? 0 : $termTaxonomy->getPostCount();
+    }
+
+    /**
+     * @return PSS\Bundle\BlogBundle\Entity\TermTaxonomy
+     */
+    private function getPostTagTaxonomy()
+    {
+        if (!is_null($this->termTaxonomies)) {
+            foreach ($this->termTaxonomies as $termTaxonomy) {
+                if (TermTaxonomy::POST_TAG  == $termTaxonomy->getTaxonomy()) {
+                    return $termTaxonomy;
+                }
+            }
         }
 
-        $termTaxonomy = $this->termTaxonomies->first();
-
-        return $termTaxonomy->getPostCount();
+        return null;
     }
 }
