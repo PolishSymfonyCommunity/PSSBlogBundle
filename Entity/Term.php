@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="wp_terms")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PSS\Bundle\BlogBundle\Repository\TermRepository")
  */
 class Term
 {
