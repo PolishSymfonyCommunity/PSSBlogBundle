@@ -1,6 +1,6 @@
 <ul class="tag-cloud">
-    {% for tag in tags%}
-        {% set count=tag.postCount %}
-        <li class="size"><a href="{{ path('blog_posts_by_tag', { 'tag': tag.slug }) }}"  title="{% transchoice count with { '%tag%': tag.name } %}{0} No posts taggged with %tag%|{1} One post tagged with %tag%|]1,+Inf] %count% posts tagged with %tag%{% endtranschoice %}">{{ tag.name }}</a></li>
+    {% for tag in tagCloud.tags %}
+        {% set count=tag.frequency %}
+        <li class="{{ tag.weight }}"><a href="{{ path('blog_posts_by_tag', { 'tag': tag.slug }) }}"  title="{% transchoice count with { '%tag%': tag.name } %}{0} No posts taggged with %tag%|{1} One post tagged with %tag%|]1,+Inf] %count% posts tagged with %tag%{% endtranschoice %}">{{ tag.name }}</a></li>
     {% endfor %}
 </ul>

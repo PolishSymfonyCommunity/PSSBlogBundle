@@ -9,7 +9,7 @@ use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
  * @ORM\Table(name="wp_terms")
  * @ORM\Entity(repositoryClass="PSS\Bundle\BlogBundle\Repository\TermRepository")
  */
-class Term
+class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 {
     /**
      * @var integer $id
@@ -63,6 +63,14 @@ class Term
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getFrequency()
+    {
+        return $this->getPostCount();
     }
 
     /**

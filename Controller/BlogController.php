@@ -76,6 +76,8 @@ class BlogController extends Controller
             ->getRepository('PSS\Bundle\BlogBundle\Entity\Term')
             ->findAllTags();
 
-        return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tags' => $tags));
+        $tagCloud = new \PSS\Bundle\BlogBundle\TagCloud\TagCloud($tags, array('size1', 'size2', 'size3', 'size4', 'size5', 'size6', 'size7', 'size8'));
+
+        return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tagCloud' => $tagCloud));
     }
 }
