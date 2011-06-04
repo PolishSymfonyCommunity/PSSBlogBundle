@@ -9,10 +9,9 @@ use PSS\Bundle\BlogBundle\Entity\Post;
 class PostRepository extends EntityRepository
 {
     /**
-     * @param integer $max
-     * @return array
+     * @return Doctrine\ORM\Query
      */
-    public function findPublishedPosts($max = 3)
+    public function getPublishedPostsQuery()
     {
         $query = $this->getEntityManager()->createQuery(
             'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
@@ -23,16 +22,26 @@ class PostRepository extends EntityRepository
 
         $query->setParameter('type', Post::TYPE_POST);
         $query->setParameter('status', Post::STATUS_PUBLISH);
+
+        return $query;
+    }
+
+    /**
+     * @param integer $max
+     * @return PSS\Bundle\BlogBundle\Entity\Post
+     */
+    public function findPublishedPosts($max = 3)
+    {
+        $query = $this->getPublishedPostsQuery();
         $query->setMaxResults($max);
 
         return $query->getResult();
     }
 
     /**
-     * @param string $tagSlug
-     * @return array
+     * @return Doctrine\ORM\Query
      */
-    public function findPublishedPostsByTag($tagSlug)
+    public function getPublishedPostsByTagQuery($tagSlug)
     {
         $query = $this->getEntityManager()->createQuery(
             'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
@@ -52,7 +61,7 @@ class PostRepository extends EntityRepository
         $query->setParameter('slug', $tagSlug);
         $query->setParameter('taxonomy', TermTaxonomy::POST_TAG);
 
-        return $query->getResult();
+        return $query;
     }
 
     /**
