@@ -67,4 +67,17 @@ class BlogController extends Controller
 
         return $this->render('PSSBlogBundle:Blog:recentPosts.html.twig', array('posts' => $posts));
     }
+
+    public function tagCloudAction()
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $tags = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Term')
+            ->findAllTags();
+
+        $tagCloud = new \PSS\Bundle\BlogBundle\TagCloud\TagCloud($tags, array('size1', 'size2', 'size3', 'size4', 'size5', 'size6', 'size7', 'size8'));
+
+        return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tagCloud' => $tagCloud));
+    }
 }

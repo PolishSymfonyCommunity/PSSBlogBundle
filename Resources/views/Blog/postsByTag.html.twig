@@ -3,3 +3,7 @@
 {% block content %}
     {% include 'PSSBlogBundle:Blog:postsList.html.twig' with {'posts': posts} %}
 {% endblock %}
+
+{% block sidebar %}
+    {% render 'PSSBlogBundle:Blog:tagCloud' %}
+{% endblock %}

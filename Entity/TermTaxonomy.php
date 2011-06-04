@@ -10,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TermTaxonomy
 {
+    const POST_TAG      = 'post_tag';
+    const CATEGORY      = 'category';
+    const LINK_CATEGORY = 'link_category';
+
     /**
      * @var integer $id
      *
@@ -69,4 +73,20 @@ class TermTaxonomy
      * @ORM\JoinColumn(name="term_taxonomy_id", referencedColumnName="term_taxonomy_id")
      */
     private $termRelationships;
+
+    /**
+     * @return string
+     */
+    public function getTaxonomy()
+    {
+        return $this->taxonomy;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPostCount()
+    {
+        return $this->count;
+    }
 }

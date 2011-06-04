@@ -10,6 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Post
 {
+    const STATUS_PUBLISH    = 'publish';
+    const STATUS_INHERIT    = 'inherit';
+    const STATUS_DRAFT      = 'draft';
+    const STATUS_AUTO_DRAFT = 'auto-draft';
+
+    const TYPE_ATTACHMENT   = 'attachment';
+    const TYPE_PAGE         = 'page';
+    const TYPE_POST         = 'post';
+    const TYPE_REVISION     = 'revision';
+
     /**
      * @var integer $id
      *

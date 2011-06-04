@@ -3,6 +3,8 @@
 namespace PSS\Bundle\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
+use PSS\Bundle\BlogBundle\Entity\Post;
 
 class PostRepository extends EntityRepository
 {
@@ -15,10 +17,12 @@ class PostRepository extends EntityRepository
         $query = $this->getEntityManager()->createQuery(
             'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
              INNER JOIN p.author a
-             WHERE p.type = \'post\' AND p.status = \'publish\'
+             WHERE p.type = :type AND p.status = :status
              ORDER BY p.publishedAt DESC'
         );
 
+        $query->setParameter('type', Post::TYPE_POST);
+        $query->setParameter('status', Post::STATUS_PUBLISH);
         $query->setMaxResults($max);
 
         return $query->getResult();
@@ -36,13 +40,17 @@ class PostRepository extends EntityRepository
              INNER JOIN p.termRelationships tr
              INNER JOIN tr.termTaxonomy tt
              INNER JOIN tt.term t
-             WHERE p.type = \'post\'
-               AND p.status = \'publish\'
-               AND tt.taxonomy = \'post_tag\'
+             WHERE p.type = :type
+               AND p.status = :status
+               AND tt.taxonomy = :taxonomy
                AND t.slug = :slug
              ORDER BY p.publishedAt DESC'
-        )
-        ->setParameter('slug', $tagSlug);
+        );
+
+        $query->setParameter('type', Post::TYPE_POST);
+        $query->setParameter('status', Post::STATUS_PUBLISH);
+        $query->setParameter('slug', $tagSlug);
+        $query->setParameter('taxonomy', TermTaxonomy::POST_TAG);
 
         return $query->getResult();
     }
@@ -56,11 +64,14 @@ class PostRepository extends EntityRepository
         $query = $this->getEntityManager()->createQuery(
             'SELECT p FROM PSS\Bundle\BlogBundle\Entity\Post p
              WHERE p.slug = :slug
-             AND p.status = \'publish\'
-             AND p.type IN (\'post\', \'page\')'
+             AND p.status = :status
+             AND p.type IN (:type_post, :type_page)'
         );
 
+        $query->setParameter('status', Post::STATUS_PUBLISH);
         $query->setParameter('slug', $slug);
+        $query->setParameter('type_post', Post::TYPE_POST);
+        $query->setParameter('type_page', Post::TYPE_PAGE);
 
         return $query->getSingleResult();
     }
