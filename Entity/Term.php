@@ -3,12 +3,13 @@
 namespace PSS\Bundle\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 
 /**
  * @ORM\Table(name="wp_terms")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PSS\Bundle\BlogBundle\Repository\TermRepository")
  */
-class Term
+class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 {
     /**
      * @var integer $id
@@ -47,4 +48,54 @@ class Term
      * @ORM\JoinColumn(name="term_id", referencedColumnName="term_id")
      */
     private $termTaxonomies;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getFrequency()
+    {
+        return $this->getPostCount();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPostCount()
+    {
+        $termTaxonomy = $this->getPostTagTaxonomy();
+
+        return is_null($termTaxonomy) ? 0 : $termTaxonomy->getPostCount();
+    }
+
+    /**
+     * @return PSS\Bundle\BlogBundle\Entity\TermTaxonomy
+     */
+    private function getPostTagTaxonomy()
+    {
+        if (!is_null($this->termTaxonomies)) {
+            foreach ($this->termTaxonomies as $termTaxonomy) {
+                if (TermTaxonomy::POST_TAG  == $termTaxonomy->getTaxonomy()) {
+                    return $termTaxonomy;
+                }
+            }
+        }
+
+        return null;
+    }
 }
