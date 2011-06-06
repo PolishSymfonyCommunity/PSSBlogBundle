@@ -14,11 +14,13 @@ class BlogController extends Controller
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $posts = $entityManager
+        $query = $entityManager
             ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
-            ->findPublishedPosts();
+            ->getPublishedPostsQuery();
 
-        return $this->render('PSSBlogBundle:Blog:index.html.twig', array('posts' => $posts));
+        $paginator = $this->createPaginator($query);
+
+        return $this->render('PSSBlogBundle:Blog:index.html.twig', array('paginator' => $paginator));
     }
 
     /**
@@ -28,15 +30,17 @@ class BlogController extends Controller
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $posts = $entityManager
+        $query = $entityManager
             ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
-            ->findPublishedPostsByTag($tag);
+            ->getPublishedPostsByTagQuery($tag);
 
-        if (!$posts) {
+        $paginator = $this->createPaginator($query);
+
+        if ($paginator->getTotalItemCount() == 0) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
         }
 
-        return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('posts' => $posts));
+        return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('paginator' => $paginator));
     }
 
     /**
@@ -79,5 +83,23 @@ class BlogController extends Controller
         $tagCloud = new \PSS\Bundle\BlogBundle\TagCloud\TagCloud($tags, array('size1', 'size2', 'size3', 'size4', 'size5', 'size6', 'size7', 'size8'));
 
         return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tagCloud' => $tagCloud));
+    }
+
+    /**
+     * @param Doctrine\ORM\Query
+     * @return Zend\Paginator\Paginator
+     */
+    private function createPaginator(\Doctrine\ORM\Query $query)
+    {
+        $adapter = $this->get('knplabs_paginator.adapter');
+        $adapter->setQuery($query);
+        $adapter->setDistinct(true);
+
+        $paginator = new \Zend\Paginator\Paginator($adapter);
+        $paginator->setCurrentPageNumber($this->get('request')->query->get('page', 1));
+        $paginator->setItemCountPerPage(3);
+        $paginator->setPageRange(5);
+
+        return $paginator;
     }
 }
