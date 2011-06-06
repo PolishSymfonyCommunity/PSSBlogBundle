@@ -1,7 +1,7 @@
 {% extends 'PSSBlogBundle::layout.html.twig' %}
 
 {% block content %}
-    {% include 'PSSBlogBundle:Blog:postsList.html.twig' with {'posts': posts} %}
+    {% include 'PSSBlogBundle:Blog:postsList.html.twig' with {'paginator': paginator} %}
 {% endblock %}
 
 {% block sidebar %}
