@@ -44,6 +44,29 @@ class BlogController extends Controller
     }
 
     /**
+     * @Route("/feed", name="blog_feed")
+     */
+    public function feedAction()
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $posts = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+            ->getPublishedPostsQuery()
+            ->execute();
+
+        $optionRepo = $entityManager->getRepository('PSS\Bundle\BlogBundle\Entity\Option');
+
+        $options = array(
+            'siteurl' => $optionRepo->findOneByName('siteurl')->getValue(),
+            'blogname' => $optionRepo->findOneByName('blogname')->getValue(),
+            'rss_language' => $optionRepo->findOneByName('rss_language')->getValue(),
+        );
+
+        return $this->render('PSSBlogBundle:Blog:feed.rss.twig', array('posts' => $posts, 'options' => $options));
+    }
+
+    /**
      * @Route("/{slug}", name="blog_show")
      */
     public function showAction($slug)
