@@ -2,6 +2,7 @@
 
 namespace PSS\Bundle\BlogBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -63,7 +64,9 @@ class BlogController extends Controller
             'rss_language' => $optionRepo->findOneByName('rss_language')->getValue(),
         );
 
-        return $this->render('PSSBlogBundle:Blog:feed.rss.twig', array('posts' => $posts, 'options' => $options));
+        $xml = $this->renderView('PSSBlogBundle:Blog:feed.rss.twig', array('posts' => $posts, 'options' => $options));
+
+        return new Response($xml, 200, array('Content-Type' => 'application/xml'));
     }
 
     /**
