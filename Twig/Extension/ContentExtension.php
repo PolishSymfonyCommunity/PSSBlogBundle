@@ -7,7 +7,8 @@ class ContentExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'autop' => new \Twig_Filter_Method($this, 'autop')
+            'autop' => new \Twig_Filter_Method($this, 'autop'),
+            'more'  => new \Twig_Filter_Method($this, 'cutToMoreTag')
         );
     }
 
@@ -69,6 +70,20 @@ class ContentExtension extends \Twig_Extension
         }
         $content = preg_replace( "|\n</p>$|", '</p>', $content );
         // 	$content = preg_replace('/<p>\s*?(' . get_shortcode_regex() . ')\s*<\/p>/s', '$1', $content); // don't auto-p wrap shortcodes that stand alone
+
+        return $content;
+    }
+
+    /**
+     * @param string $content
+     * @param string $moreTagReplacement
+     * @return string
+     */
+    public function cutToMoreTag($content, $moreTagReplacement)
+    {
+        if (preg_match('/(.*)(<!--more(.*?)?-->)(.*)/Us', $content, $matches)) {
+           return $matches[1] . $moreTagReplacement;
+        }
 
         return $content;
     }
