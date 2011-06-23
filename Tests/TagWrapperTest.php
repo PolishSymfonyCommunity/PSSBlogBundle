@@ -1,6 +1,6 @@
 <?php
 
-namespace PSS\Bundle\BlogBundle\Tests;
+namespace PSS\Bundle\BlogBundle\Tests\TagWrapperTest;
 
 use PSS\Bundle\BlogBundle\TagCloud\TagCloud;
 use PSS\Bundle\BlogBundle\TagCloud\TagWrapper;

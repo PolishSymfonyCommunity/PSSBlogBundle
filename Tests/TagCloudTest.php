@@ -1,6 +1,6 @@
 <?php
 
-namespace PSS\Bundle\BlogBundle\Tests;
+namespace PSS\Bundle\BlogBundle\Tests\TagCloudTest;
 
 use PSS\Bundle\BlogBundle\TagCloud\TagCloud;
 
