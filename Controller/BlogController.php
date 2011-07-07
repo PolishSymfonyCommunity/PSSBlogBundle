@@ -91,7 +91,7 @@ class BlogController extends Controller
      */
     private function createPaginator(\Doctrine\ORM\Query $query)
     {
-        $adapter = $this->get('knplabs_paginator.adapter');
+        $adapter = $this->get('knp_paginator.adapter');
         $adapter->setQuery($query);
         $adapter->setDistinct(true);
 
