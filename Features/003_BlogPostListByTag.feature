@@ -17,7 +17,7 @@ Feature: Listing blog posts by tag
       | page     | publish | About                                                              | about                                                              | 3th May 2010    | admin      |         | About me.     | symfony |
 
   Scenario: Viewing posts tagged with an existing term
-     When I go to /tag/symfony
+     When I go to "/tag/symfony"
      Then I should see "Multistage deployment of Symfony applications with capifony"
       And I should see "Nginx configuration for Symfony projects"
       And I should see "Compiling doctrine in symfony 1.4"
@@ -30,5 +30,5 @@ Feature: Listing blog posts by tag
       And I should see "When profiling symfony 1.x applications hydrating Doctrine objects occurs to be one of the most time consuming operations."
 
   Scenario: Viewing posts tagged with a non existing term
-     When I go to /tag/does-not-exists
+     When I go to "/tag/does-not-exists"
      Then I should see "Page Not Found"

@@ -32,14 +32,14 @@ Feature: Viewing tag cloud
       | page     | publish | About                                                              | about                                                              | 3th May 2010    | admin      |         | About me.     |         | Default,symfony |
 
   Scenario: Only active tags are visible
-     When I go to /blog
-     Then I should see "3 posts tagged with symfony"
-      And I should see "2 posts tagged with nginx"
-      And I should see "One post tagged with capifony"
-      And I should see "One post tagged with php"
-      And I should see "One post tagged with ubuntu"
-      And I should see "One post tagged with doctrine"
-      But I should not see "tagged with Symfony2"
-      And I should not see "tagged with config"
-      And I should not see "tagged with Default"
+     When I go to "/blog"
+     Then the response should contain "3 posts tagged with symfony"
+      And the response should contain "2 posts tagged with nginx"
+      And the response should contain "One post tagged with capifony"
+      And the response should contain "One post tagged with php"
+      And the response should contain "One post tagged with ubuntu"
+      And the response should contain "One post tagged with doctrine"
+      But the response should not contain "tagged with Symfony2"
+      And the response should not contain "tagged with config"
+      And the response should not contain "tagged with Default"
 
