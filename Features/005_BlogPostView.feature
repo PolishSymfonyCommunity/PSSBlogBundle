@@ -17,19 +17,19 @@ Feature: Viewing blog posts
       | page     | publish | About                                                              | about                                                              | 3th May 2010    | admin      |         | About me.     |
 
   Scenario: Viewing published post
-     When I go to /multistage-deployment-of-symfony-applications-with-capifony
+     When I go to "/multistage-deployment-of-symfony-applications-with-capifony"
      Then I should see "Multistage deployment of Symfony applications with capifony"
-      And I should see "<a href='/uploads/wp/2011/04/Symfony2-capistrano-multistage-files.png'><img class='size-medium wp-image-709 alignright' title='Capistrano files in Symfony2 project' src='/uploads/wp/2011/04/Symfony2-capistrano-multistage-files-227x400.png' alt='' width='227' height='400' /></a><strong>Capifony</strong> is a collection of <strong>Capistrano</strong> deployment recipes for both <strong>symfony</strong> and <strong>Symfony2</strong> applications."
+      And the response should contain "<a href='/uploads/wp/2011/04/Symfony2-capistrano-multistage-files.png'><img class='size-medium wp-image-709 alignright' title='Capistrano files in Symfony2 project' src='/uploads/wp/2011/04/Symfony2-capistrano-multistage-files-227x400.png' alt='' width='227' height='400' /></a><strong>Capifony</strong> is a collection of <strong>Capistrano</strong> deployment recipes for both <strong>symfony</strong> and <strong>Symfony2</strong> applications."
 
   Scenario: Viewing draft post
-     When I go to /nginx-configuration-for-symfony-projects-draft
+     When I go to "/nginx-configuration-for-symfony-projects-draft"
      Then I should see "Page Not Found"
 
   Scenario: Viewing article
-     When I go to /about
+     When I go to "/about"
      Then I should see "About me."
 
   Scenario: Viewing revision
-     When I go to /nginx-configuration-for-symfony-projects-revision
+     When I go to "/nginx-configuration-for-symfony-projects-revision"
      Then I should see "Page Not Found"
 
