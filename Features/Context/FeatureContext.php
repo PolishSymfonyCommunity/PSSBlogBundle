@@ -287,6 +287,18 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^I should see "([^"]*)" more link$/
+     */
+    public function iShouldSeeMoreLink($linkUrl)
+    {
+        $link = sprintf(
+            '<a class="more" href="%s"',
+            $linkUrl
+        );
+        $this->assertResponseContains($link);
+    }
+
+    /**
      * We don't want to add setters just because we need them in tests.
      * Also, we want to set raw data. This copies the way Doctrine's loading
      * fixtures.

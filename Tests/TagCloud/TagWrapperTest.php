@@ -1,11 +1,11 @@
 <?php
 
-namespace PSS\Bundle\BlogBundle\Tests\TagWrapperTest;
+namespace PSS\Bundle\BlogBundle\Tests\TagCloud;
 
 use PSS\Bundle\BlogBundle\TagCloud\TagCloud;
 use PSS\Bundle\BlogBundle\TagCloud\TagWrapper;
 
-class Tag implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
+class WrapperTag implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 {
     private $name = null;
 
@@ -47,9 +47,9 @@ class TagWrapperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $tag = new Tag('symfony', 3);
+        $tag = new WrapperTag('symfony', 3);
         $tagCloud = new FakeTagCloud(
-            array($tag, new Tag('php', 5), new Tag('tdd', 2)),
+            array($tag, new WrapperTag('php', 5), new WrapperTag('tdd', 2)),
             array('small', 'medium', 'large')
         );
         $this->tagWrapper = new TagWrapper($tag, $tagCloud);

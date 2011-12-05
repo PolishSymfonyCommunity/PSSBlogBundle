@@ -1,10 +1,10 @@
 <?php
 
-namespace PSS\Bundle\BlogBundle\Tests\TagCloudTest;
+namespace PSS\Bundle\BlogBundle\Tests\TagCloud;
 
 use PSS\Bundle\BlogBundle\TagCloud\TagCloud;
 
-class Tag implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
+class CloudTag implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 {
     private $name = null;
 
@@ -34,26 +34,26 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
      */
     public function testThatAtLeastOneWeightIsRequired()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 10)), array());
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 10)), array());
     }
 
     public function testThatFrequencyOutOfRangeHasMaximumWeight()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 2), new Tag('php', 10)), array('small', 'big', 'large'));
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 2), new CloudTag('php', 10)), array('small', 'big', 'large'));
 
         $this->assertEquals('large', $tagCloud->getWeight(400));
     }
 
     public function testThatTooSmallFrequencyHasMinimumWeight()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 200), new Tag('php', 300)), array('small', 'big', 'large'));
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 200), new CloudTag('php', 300)), array('small', 'big', 'large'));
 
         $this->assertEquals('small', $tagCloud->getWeight(1));
     }
 
     public function testThatWeightCanBeRetrievedByTagName()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 2), new Tag('php', 10)), array('small', 'big', 'large'));
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 2), new CloudTag('php', 10)), array('small', 'big', 'large'));
 
         $this->assertEquals('small', $tagCloud->getWeightForTagName('symfony'));
         $this->assertEquals('large', $tagCloud->getWeightForTagName('php'));
@@ -61,7 +61,7 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
 
     public function testThatWeightForTagOutsideOfCloudIsMinimal()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 2), new Tag('php', 10)), array('small', 'big', 'large'));
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 2), new CloudTag('php', 10)), array('small', 'big', 'large'));
 
         $this->assertEquals('small', $tagCloud->getWeightForTagName('tdd'));
     }
@@ -83,84 +83,84 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 array('small'),
-                array(new Tag('symfony', 1)),
+                array(new CloudTag('symfony', 1)),
                 array('symfony' => 'small')
             ),
             array(
                 array('small'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2)),
                 array('symfony' => 'small', 'Symfony2' => 'small')
             ),
             array(
                 array('small'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small')
             ),
 
             array(
                 array('small', 'big'),
-                array(new Tag('symfony', 1)),
+                array(new CloudTag('symfony', 1)),
                 array('symfony' => 'small')
             ),
             array(
                 array('small', 'big'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2)),
                 array('symfony' => 'small', 'Symfony2' => 'big')
             ),
             array(
                 array('small', 'big'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'big')
             ),
             array(
                 array('small', 'big'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small', 'tdd' => 'big')
             ),
 
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1)),
+                array(new CloudTag('symfony', 1)),
                 array('symfony' => 'small')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2)),
                 array('symfony' => 'small', 'Symfony2' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'big', 'tdd' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4), new Tag('bdd', 5)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4), new CloudTag('bdd', 5)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small', 'tdd' => 'big', 'bdd' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4), new Tag('bdd', 5), new Tag('ui', 6)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4), new CloudTag('bdd', 5), new CloudTag('ui', 6)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small', 'tdd' => 'small', 'bdd' => 'big', 'ui' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4), new Tag('bdd', 5), new Tag('ui', 6), new Tag('phpunit', 7)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4), new CloudTag('bdd', 5), new CloudTag('ui', 6), new CloudTag('phpunit', 7)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small', 'tdd' => 'small', 'bdd' => 'big', 'ui' => 'big', 'phpunit' => 'large')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 11), new Tag('Symfony2', 15), new Tag('php', 3), new Tag('tdd', 4), new Tag('bdd', 5), new Tag('ui', 1), new Tag('phpunit', 3), new Tag('lime', 2)),
+                array(new CloudTag('symfony', 11), new CloudTag('Symfony2', 15), new CloudTag('php', 3), new CloudTag('tdd', 4), new CloudTag('bdd', 5), new CloudTag('ui', 1), new CloudTag('phpunit', 3), new CloudTag('lime', 2)),
                 array('symfony' => 'big', 'Symfony2' => 'large', 'php' => 'small', 'tdd' => 'small', 'bdd' => 'small', 'ui' => 'small', 'phpunit' => 'small', 'lime' => 'small')
             ),
             array(
                 array('small', 'big', 'large'),
-                array(new Tag('symfony', 1), new Tag('Symfony2', 2), new Tag('php', 3), new Tag('tdd', 4), new Tag('bdd', 5), new Tag('ui', 6), new Tag('phpunit', 7), new Tag('lime', 8), new Tag('ddd', 9)),
+                array(new CloudTag('symfony', 1), new CloudTag('Symfony2', 2), new CloudTag('php', 3), new CloudTag('tdd', 4), new CloudTag('bdd', 5), new CloudTag('ui', 6), new CloudTag('phpunit', 7), new CloudTag('lime', 8), new CloudTag('ddd', 9)),
                 array('symfony' => 'small', 'Symfony2' => 'small', 'php' => 'small', 'tdd' => 'small', 'bdd' => 'small', 'ui' => 'small', 'phpunit' => 'big', 'lime' => 'big', 'ddd' => 'large')
             ),
         );
@@ -168,8 +168,8 @@ class TagCloudTest extends \PHPUnit_Framework_TestCase
 
     public function testThatTagsAreWrapped()
     {
-        $tagCloud = new TagCloud(array(new Tag('symfony', 2)), array('small', 'big', 'large'));
-        $tagCloud->addTag(new Tag('php', 10));
+        $tagCloud = new TagCloud(array(new CloudTag('symfony', 2)), array('small', 'big', 'large'));
+        $tagCloud->addTag(new CloudTag('php', 10));
 
         $tags = $tagCloud->getTags();
 

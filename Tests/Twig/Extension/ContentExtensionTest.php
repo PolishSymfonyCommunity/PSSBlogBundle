@@ -1,6 +1,6 @@
 <?php
 
-namespace PSS\Bundle\BlogBundle\Tests\ContentExtensionTest;
+namespace PSS\Bundle\BlogBundle\Tests\Twig\Extension;
 
 use PSS\Bundle\BlogBundle\Twig\Extension\ContentExtension;
 

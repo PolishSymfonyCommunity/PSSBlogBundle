@@ -30,7 +30,7 @@ Feature: Listing blog posts
       And I should see "Recent release of Nginx 1.0.0 triggered me to refresh my knowledge about its configuration options."
 
   Scenario: Viewing posts are cut to more tag
-     When I go to /blog
-     Then I should see "//a[@class='more' and @href='/nginx-configuration-for-symfony-projects']" element
+     When I go to "/blog"
+     Then I should see "/nginx-configuration-for-symfony-projects" more link
       And I should see "Recent release of Nginx 1.0.0 triggered me to refresh my knowledge about its configuration options."
       And I should not see "<img class='alignright size-full wp-image-736' title='Nginx / Symfony' src='/uploads/wp/2011/04/nginx-symfony.png' alt='' width='350' height='90' />Recent release of Nginx 1.0.0 triggered me to refresh my knowledge about its configuration options. There were quite some additions since I looked in the docs for the last time. New variables and directives let me to simplify my configuration for Symfony projects (both 1.x and 2)."
