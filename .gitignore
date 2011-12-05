@@ -1,0 +1,5 @@
+phpunit.xml
+coverage
+vendor/symfony
+vendor/twig
+Tests/autoload.php

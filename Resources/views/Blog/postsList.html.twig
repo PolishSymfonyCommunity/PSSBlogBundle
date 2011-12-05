@@ -4,7 +4,8 @@
     {% if post.excerpt %}
         {{ post.excerpt | autop | raw }}
     {% else %}
-        {{ post.content | autop | raw }}
+        {% set moreLink = '<a class="more" href="' ~ path('blog_show', {'slug': post.slug }) ~ '" title="' ~  post.title ~ '">' ~ '&raquo; Read more' | trans ~ '</a>' %}
+        {{ post.content | autop | more(moreLink) | raw }}
     {% endif %}
     <div class="post-meta">
         {% trans with { '%date%': post.publishedAt | date('d M Y'), '%author%': post.author.displayName } %}Posted on %date% by %author%{% endtrans %}
