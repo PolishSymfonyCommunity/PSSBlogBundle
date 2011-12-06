@@ -35,12 +35,12 @@ After download of needed bundles you should add some configuration.
 
 You should register namespace in ``app/autoload.php``:
 
-$loader->registerNamespaces(array(
-    ...
-    'Knp\Bundle'       => __DIR__.'/../vendor/bundles',
-    'Zend'             => __DIR__.'/../vendor/Zend/library',
-    'PSS'              => __DIR__.'/../vendor/bundles/',
-));
+    $loader->registerNamespaces(array(
+        ...
+        'Knp\Bundle'       => __DIR__.'/../vendor/bundles',
+        'Zend'             => __DIR__.'/../vendor/Zend/library',
+        'PSS'              => __DIR__.'/../vendor/bundles/',
+    ));
 
 You should register bundles in ``app/AppKernel.php``:
 
