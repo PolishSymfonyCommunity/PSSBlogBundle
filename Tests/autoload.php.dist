@@ -8,7 +8,10 @@ require_once $symfonyDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
-$loader->registerNamespace('Symfony', $symfonyDir);
+$loader->registerNamespaces(array(
+    'Symfony' => array($symfonyDir),
+    'Doctrine' => array($vendorDir . '/doctrine/lib', $vendorDir . '/doctrine-common/lib'),
+));
 $loader->registerPrefixes(array(
     'Twig_' => $vendorDir.'/twig/lib',
 ));
