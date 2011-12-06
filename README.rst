@@ -48,7 +48,6 @@ You should register bundles in ``app/AppKernel.php``:
     {
         $bundles = array(
             ...
-            
             new PSS\Bundle\BlogBundle\PSSBlogBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         );
