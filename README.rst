@@ -33,7 +33,7 @@ Configuration
 
 After download of needed bundles you should add some configuration.
 
-You should register namespace in ``app/autoload.php`` code::
+You should register namespace in ``app/autoload.php``::
 
     $loader->registerNamespaces(array(
         ...
@@ -42,7 +42,7 @@ You should register namespace in ``app/autoload.php`` code::
         'PSS'              => __DIR__.'/../vendor/bundles/',
     ));
 
-You should register bundles in ``app/AppKernel.php`` code::
+You should register bundles in ``app/AppKernel.php``::
 
     public function registerBundles()
     {
