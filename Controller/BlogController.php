@@ -2,6 +2,7 @@
 
 namespace PSS\Bundle\BlogBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -41,6 +42,31 @@ class BlogController extends Controller
         }
 
         return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('paginator' => $paginator));
+    }
+
+    /**
+     * @Route("/feed", name="blog_feed")
+     */
+    public function feedAction()
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $posts = $entityManager
+            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
+            ->getPublishedPostsQuery()
+            ->execute();
+
+        $optionRepo = $entityManager->getRepository('PSS\Bundle\BlogBundle\Entity\Option');
+
+        $options = array(
+            'siteurl' => $optionRepo->findOneByName('siteurl')->getValue(),
+            'blogname' => $optionRepo->findOneByName('blogname')->getValue(),
+            'rss_language' => $optionRepo->findOneByName('rss_language')->getValue(),
+        );
+
+        $xml = $this->renderView('PSSBlogBundle:Blog:feed.rss.twig', array('posts' => $posts, 'options' => $options));
+
+        return new Response($xml, 200, array('Content-Type' => 'application/xml'));
     }
 
     /**

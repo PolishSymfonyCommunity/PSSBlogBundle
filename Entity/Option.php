@@ -46,4 +46,44 @@ class Option
      * @ORM\Column(name="autoload", type="string", length=20, nullable=false)
      */
     private $autoload;
+
+    public function setBlogId($blogId)
+    {
+        $this->blogId = $blogId;
+    }
+
+    public function getBlogId()
+    {
+        return $this->blogId;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function setAutoload($flag)
+    {
+        $this->autoload = $flag;
+    }
+
+    public function getAutoload()
+    {
+        return $this->autoload;
+    }
 }
