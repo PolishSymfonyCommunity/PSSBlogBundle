@@ -4,6 +4,7 @@ namespace PSS\Bundle\BlogBundle\Features\Context;
 
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Gherkin\Node\TableNode;
+use Behat\CommonContext\SymfonyDoctrineContext;
 
 /**
  * Feature context.
@@ -42,22 +43,7 @@ class FeatureContext extends MinkContext
     {
         parent::__construct($kernel);
 
-        $this->cleanDatabase();
-    }
-
-    /**
-     * @return null
-     */
-    private function cleanDatabase()
-    {
-        $container = $this->getKernel()->getContainer();
-        $entityManager = $container->get('doctrine.orm.entity_manager');
-
-        $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\TermRelationship')->execute();
-        $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\TermTaxonomy')->execute();
-        $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\Post')->execute();
-        $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\Term')->execute();
-        $entityManager->createQuery('DELETE PSS\Bundle\BlogBundle\Entity\User')->execute();
+        $this->useContext('doctrine', new SymfonyDoctrineContext($kernel));
     }
 
     /**
