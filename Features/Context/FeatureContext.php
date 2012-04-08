@@ -4,7 +4,7 @@ namespace PSS\Bundle\BlogBundle\Features\Context;
 
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Gherkin\Node\TableNode;
-use Behat\CommonContext\SymfonyDoctrineContext;
+use Behat\CommonContexts\SymfonyDoctrineContext;
 
 /**
  * Feature context.
