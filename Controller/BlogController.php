@@ -86,20 +86,16 @@ class BlogController extends Controller
     }
 
     /**
-     * @param Doctrine\ORM\Query
-     * @return Zend\Paginator\Paginator
+     * @param \Doctrine\ORM\Query $query
+     *
+     * @return \Knp\Component\Pager\Pagination\PaginationInterface
      */
     private function createPaginator(\Doctrine\ORM\Query $query)
     {
-        $adapter = $this->get('knp_paginator.adapter');
-        $adapter->setQuery($query);
-        $adapter->setDistinct(true);
+        $paginator = $this->get('knp_paginator');
+        $request = $this->get('request');
+        $page = $request->query->get('page', 1);
 
-        $paginator = new \Zend\Paginator\Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->get('request')->query->get('page', 1));
-        $paginator->setItemCountPerPage(3);
-        $paginator->setPageRange(5);
-
-        return $paginator;
+        return $paginator->paginate($query, $page, 3);
     }
 }
