@@ -12,5 +12,5 @@
     </div>
 {% endfor %}
 <div class="paginator">
-    {{ paginator|paginate }}
+    {{ paginator.render() | raw }}
 </div>
