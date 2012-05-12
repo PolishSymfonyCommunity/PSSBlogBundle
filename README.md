@@ -3,6 +3,7 @@ PSSBlogBundle
 
 Symfony2 blog bundle based on the WordPress database model.
 
+[![Build Status](https://secure.travis-ci.org/PolishSymfonyCommunity/PSSBlogBundle.png?branch=master)](http://travis-ci.org/PolishSymfonyCommunity/PSSBlogBundle)
 
 ## Installation
 
