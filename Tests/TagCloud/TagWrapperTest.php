@@ -35,7 +35,7 @@ class WrapperTag implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 
 class FakeTagCloud extends TagCloud
 {
-    public function getWeight()
+    public function getWeight($frequency)
     {
         return 'fake';
     }
@@ -63,7 +63,7 @@ class TagWrapperTest extends \PHPUnit_Framework_TestCase
 
     public function testThatWeightIsCalculatedByTagCloud()
     {
-        $this->assertEquals('fake', $this->tagWrapper->getWeight());
+        $this->assertEquals('fake', $this->tagWrapper->getWeight(2));
     }
 
     public function testThatGetterCallsArePassedToTheOriginalTag()
