@@ -1,6 +1,0 @@
-services:
-    pss.twig.extension.content:
-        class: PSS\Bundle\BlogBundle\Twig\Extension\ContentExtension
-        public: false
-        tags:
-            - { name: twig.extension }

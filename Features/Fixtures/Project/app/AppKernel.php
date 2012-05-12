@@ -10,7 +10,7 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles = array(
+        return array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -19,13 +19,6 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new PSS\Bundle\BlogBundle\PSSBlogBundle()
         );
-
-        if (in_array($this->getEnvironment(), array('test'))) {
-            $bundles[] = new Behat\MinkBundle\MinkBundle();
-            $bundles[] = new Behat\BehatBundle\BehatBundle();
-        }
-
-        return $bundles;
     }
 
     /**

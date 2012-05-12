@@ -25,14 +25,13 @@
         "knplabs/knp-paginator-bundle":  "*"
     },
     "require-dev": {
-        "behat/behat":           "2.3.*",
-        "behat/mink":            "1.3.*",
-        "behat/behat-bundle":    "*",
-        "behat/mink-bundle":     "*",
-        "behat/common-contexts": "*"
-    },
-    "repositories": {
-        "behat/mink-deps": { "type": "composer",  "url": "behat.org" }
+        "behat/behat":                  ">=2.4@stable",
+        "behat/mink":                   ">=1.4@stable",
+        "behat/symfony2-extension":     "*",
+        "behat/mink-extension":         "*",
+        "behat/mink-browserkit-driver": "*",
+        "behat/common-contexts":        "*",
+        "benwaine/phabric":             "*"
     },
     "autoload": {
         "psr-0": { "PSS\\Bundle\\BlogBundle": "" }

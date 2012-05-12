@@ -1,0 +1,19 @@
+default:
+  formatter:
+    name: progress
+  paths:
+    features: Features
+    bootstrap: %behat.paths.features%/Context
+  context:
+    class: PSS\Bundle\BlogBundle\Features\Context\FeatureContext
+  extensions:
+    Behat\Symfony2Extension\Extension:
+      mink_driver: true
+      kernel:
+        env: test
+        debug: true
+        path: Features/Fixtures/Project/app/AppKernel.php
+        bootstrap: Features/Fixtures/Project/app/autoload.php
+    Behat\MinkExtension\Extension:
+      base_url: 'http://www.blog.dev/app_test.php/'
+      default_session: symfony2
