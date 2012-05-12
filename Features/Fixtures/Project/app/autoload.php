@@ -3,7 +3,7 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $vendorDir = __DIR__.'/../../../../vendor';
-$loader = require_once $vendorDir.'/.composer/autoload.php';
+$loader = require_once $vendorDir.'/autoload.php';
 
 // intl
 if (!function_exists('intl_get_error_code')) {

@@ -20,7 +20,7 @@ Symfony2 blog bundle based on the WordPress database model.
 
 Enable the PSSBlogBundle and the KnpPaginatorBundle bundles in the kernel (`app/AppKernel.php`):
 
-``` php
+```php
 <?php
 // app/AppKernel.php
 
