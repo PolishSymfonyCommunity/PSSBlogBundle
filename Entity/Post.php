@@ -2,7 +2,24 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+# Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+# Specific
+
+
+# Domain objects
+
+
+# Entities
+
+
+# Exceptions
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
 
 /**
  * @ORM\Table(name="wp_posts")
@@ -255,5 +272,41 @@ class Post
     public function getTitle()
     {
         return $this->title;
+    }
+
+
+    /**
+     * @return integer
+     */
+    public function getYear()
+    {
+        $date = $this->getPublishedAt();
+        return $date->format('Y');
+    }
+
+
+    /**
+     * @return integer
+     */
+    public function getMonth()
+    {
+        $date = $this->getPublishedAt();
+        return $date->format('m');
+    }
+
+
+
+    /**
+     * Validate if post is set as published
+     *
+     * @return Post   The post
+     * @throws NotFoundHttpException  If post status is NOT to "publish"
+     */
+    public function onlyIfPublished(){
+        if($this->status != static::STATUS_PUBLISH)
+        {
+            throw new NotFoundHttpException('Page Not Found');
+        }
+        return $this;
     }
 }
