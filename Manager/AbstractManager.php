@@ -4,7 +4,7 @@ namespace PSS\Bundle\BlogBundle\Manager;
 
 # Symfony/Doctrine internal
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
 # Specific
@@ -33,5 +33,12 @@ abstract class AbstractManager
     {
         $this->dispatcher = $dispatcher;
         $this->em = $em;
+    }
+
+    protected function getRepository($name=null)
+    {
+        $entityName = ($name === null)?static::CLASSNAME:$name;
+        $repository = $this->em->getRepository($entityName);
+        return $repository;
     }
 }

@@ -26,5 +26,6 @@ use PSS\Bundle\BlogBundle\Entity\Comment;
 class CommentManager extends AbstractManager
 {
     const CLASSNAME = 'PSS\Bundle\BlogBundle\Entity\Comment';
+    const SHORTCUT =  'PSSBlogBundle:Comment';
     
 }

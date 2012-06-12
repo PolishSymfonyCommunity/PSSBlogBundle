@@ -26,5 +26,17 @@ use PSS\Bundle\BlogBundle\Entity\Post;
 class PostManager extends AbstractManager
 {
     const CLASSNAME = 'PSS\Bundle\BlogBundle\Entity\Post';
+    const SHORTCUT  = 'PSSBlogBundle:Post';
 
+
+    public function getPublishedQuery(){
+        $query = $this->getRepository()->getPublishedPostsQuery();
+        return $query;
+    }
+
+    public function getHilighted()
+    {
+        $array = $this->getPublishedQuery()->setMaxResults(3)->getResult();
+        return new \Doctrine\Common\Collections\ArrayCollection($array);
+    }
 }

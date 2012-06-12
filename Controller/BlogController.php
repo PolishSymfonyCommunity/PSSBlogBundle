@@ -2,25 +2,67 @@
 
 namespace PSS\Bundle\BlogBundle\Controller;
 
+
+# Symfony/Doctrine internal
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+
+# Specific
+
+
+# Domain objects
+
+
+# Entities
+use PSS\Bundle\BlogBundle\Entity\Post;
+
+
+
+/**
+ * Base Controller
+ *
+ * Basic views available here, to override you can 
+ * use the PostManager service. The idea of this controller
+ * is that you can extend as a Base, and alter the returned array()
+ * that each method returns using parent::methodName();
+ *
+ * Cookbook in @PSSBlogBundle/Resources/doc/recipe-extending-blog-controller.md
+ * 
+ * @Route("/blog")
+ */
 class BlogController extends Controller
 {
+
+
+
+
     /**
-     * @Route("/blog", name="blog_index")
+     * @Route("/{year}/{month}/{slug}", name="blog_show")
+     * @Template()
+     */
+    public function showAction(Post $post)
+    {
+        return array(
+            'post' => $post->onlyIfPublished()
+        );
+    }
+
+
+    /**
+     * @Route("/", name="blog_index")
+     * @Template()
      */
     public function indexAction()
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $pm = $this->getPostManager();
+        $paginator = $this->createPaginator($pm->getPublishedQuery());
 
-        $query = $entityManager
-            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
-            ->getPublishedPostsQuery();
-
-        $paginator = $this->createPaginator($query);
-
-        return $this->render('PSSBlogBundle:Blog:index.html.twig', array('paginator' => $paginator));
+        return array(
+            'pm' => $pm,
+            'paginator' => $paginator
+        );
     }
 
     /**
@@ -43,23 +85,7 @@ class BlogController extends Controller
         return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('paginator' => $paginator));
     }
 
-    /**
-     * @Route("/{slug}", name="blog_show")
-     */
-    public function showAction($slug)
-    {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        try {
-            $post = $entityManager
-                ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
-                ->findPublishedPostOrPage($slug);
-        } catch (\Doctrine\ORM\NoResultException $exception) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
-        }
-
-        return $this->render('PSSBlogBundle:Blog:show.html.twig', array('post' => $post));
-    }
 
     public function recentPostsAction($max)
     {
@@ -85,12 +111,28 @@ class BlogController extends Controller
         return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tagCloud' => $tagCloud));
     }
 
+
+
     /**
+     * Access to Post Manager service
+     * 
+     * @return \PSS\Bundle\BlogBundle\Manager\PostManager
+     */
+    protected function getPostManager()
+    {
+        return $this->get('pss.blog.manager.post');
+    }
+
+
+
+    /**
+     * Create a paginator from a Query
+     *
      * @param \Doctrine\ORM\Query $query
      *
      * @return \Knp\Component\Pager\Pagination\PaginationInterface
      */
-    private function createPaginator(\Doctrine\ORM\Query $query)
+    protected function createPaginator(\Doctrine\ORM\Query $query)
     {
         $paginator = $this->get('knp_paginator');
         $request = $this->get('request');

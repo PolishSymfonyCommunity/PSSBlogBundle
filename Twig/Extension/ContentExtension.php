@@ -8,6 +8,7 @@ class ContentExtension extends \Twig_Extension
     {
         return array(
             'autop' => new \Twig_Filter_Method($this, 'autop'),
+            'summarize' => new \Twig_Filter_Method($this, 'summarize'),
             'more'  => new \Twig_Filter_Method($this, 'cutToMoreTag')
         );
     }
@@ -112,4 +113,33 @@ class ContentExtension extends \Twig_Extension
 
         return $text;
     }
+
+    /**
+     * Create a summary based on the first letters
+     *
+     * Escapes HTML and creates a resume on $numb characters
+     * in the possibility the $numb's letter in in the middle of
+     * a word, it adjusts to take up to the end of the word.
+     *
+     * Taken from php.net example
+     * 
+     * @param  string   $text    Content text
+     * @param  int      $numb    Content length
+     * @param  string   $etc    How  you want it to mark the end (default: "...")
+     * @return integer  $max
+     */
+    public function summarize($text, $numb = 200, $etc = "...")
+    {
+        $text = strip_tags($text);
+        if (strlen($text) > $numb) {
+        $text = mb_substr($text, 0, $numb);
+        $text = mb_substr($text,0,strrpos($text," "));
+            //This strips the full stop:
+            if ((mb_substr($text, -1)) == ".") {
+                $text = mb_substr($text,0,(mb_strrpos($text,".")));
+            }
+        $text = $text.$etc;
+        }
+        return $text;
+    }    
 }
