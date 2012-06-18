@@ -2,10 +2,22 @@
 
 namespace PSS\Bundle\BlogBundle\Repository;
 
+# Symfony/Doctrine internal
 use Doctrine\ORM\EntityRepository;
+
+
+# Specific
+
+
+# Domain objects
+
+
+# Entities
 use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 
-class TermRepository extends EntityRepository
+
+
+class TermRepository extends AbstractRepository
 {
     /**
      * @return array

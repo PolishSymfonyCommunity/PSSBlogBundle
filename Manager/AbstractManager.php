@@ -35,7 +35,8 @@ abstract class AbstractManager
         $this->em = $em;
     }
 
-    protected function getRepository($name=null)
+
+    public function getRepository($name=null)
     {
         $entityName = ($name === null)?static::CLASSNAME:$name;
         $repository = $this->em->getRepository($entityName);

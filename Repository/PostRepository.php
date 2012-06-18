@@ -2,12 +2,25 @@
 
 namespace PSS\Bundle\BlogBundle\Repository;
 
+# Symfony/Doctrine internal
 use Doctrine\ORM\EntityRepository;
+
+
+# Specific
+
+
+# Domain objects
+
+
+# Entities
 use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 use PSS\Bundle\BlogBundle\Entity\Post;
 
-class PostRepository extends EntityRepository
+
+
+class PostRepository extends AbstractRepository
 {
+
     /**
      * @return Doctrine\ORM\Query
      */
@@ -26,6 +39,8 @@ class PostRepository extends EntityRepository
         return $query;
     }
 
+
+
     /**
      * @param integer $max
      * @return PSS\Bundle\BlogBundle\Entity\Post
@@ -37,6 +52,8 @@ class PostRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+
 
     /**
      * @return Doctrine\ORM\Query
@@ -64,6 +81,8 @@ class PostRepository extends EntityRepository
         return $query;
     }
 
+
+
     /**
      * @param string $slug
      * @return PSS\Bundle\BlogBundle\Entity\Post
@@ -83,5 +102,12 @@ class PostRepository extends EntityRepository
         $query->setParameter('type_page', Post::TYPE_PAGE);
 
         return $query->getSingleResult();
+    }
+
+
+
+    public function getPublishedPosts()
+    {
+        return $this->toCollection($this->getPublishedPostsQuery()->getResults());
     }
 }

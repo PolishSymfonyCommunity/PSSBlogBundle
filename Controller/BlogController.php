@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 # Entities
 use PSS\Bundle\BlogBundle\Entity\Post;
+use PSS\Bundle\BlogBundle\Entity\Tag;
 
 
 
@@ -57,24 +58,23 @@ class BlogController extends Controller
     public function indexAction()
     {
         $pm = $this->getPostManager();
-        $paginator = $this->createPaginator($pm->getPublishedQuery());
+        $paginator = $this->createPaginator($pm->getRepository()->getPublishedPostsQuery());
 
         return array(
-            'pm' => $pm,
             'paginator' => $paginator
         );
     }
 
     /**
-     * @Route("/tag/{tag}", name="blog_posts_by_tag")
+     * @Route("/tag/{name}", name="blog_posts_by_tag")
      */
-    public function postsByTagAction($tag)
+    public function postsByTagAction(Tag $tag)
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $query = $entityManager
-            ->getRepository('PSS\Bundle\BlogBundle\Entity\Post')
-            ->getPublishedPostsByTagQuery($tag);
+        $pm = $this->getPostManager()
+            ->getRepository()
+            ->getPublishedPostsByTagQuery($tag->getName());
 
         $paginator = $this->createPaginator($query);
 

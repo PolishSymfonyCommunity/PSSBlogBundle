@@ -21,3 +21,8 @@ services:
     pss.blog.manager.post:
         parent:  pss.blog.manager.entity.abstract
         class:   %pss.blog.manager.post.class%
+
+
+    pss.blog.manager.comment:
+        parent:  pss.blog.manager.entity.abstract
+        class:   %pss.blog.manager.comment.class%
