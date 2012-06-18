@@ -14,8 +14,6 @@ use \Doctrine\Common\Collections\ArrayCollection;
 
 
 # Entities
-use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
-use PSS\Bundle\BlogBundle\Entity\Post;
 
 
 

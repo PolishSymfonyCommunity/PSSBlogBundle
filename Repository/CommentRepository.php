@@ -3,7 +3,6 @@
 namespace PSS\Bundle\BlogBundle\Repository;
 
 # Symfony/Doctrine internal
-use Doctrine\ORM\EntityRepository;
 
 
 # Specific
@@ -13,7 +12,6 @@ use Doctrine\ORM\EntityRepository;
 
 
 # Entities
-use PSS\Bundle\BlogBundle\Entity\Post;
 
 
 

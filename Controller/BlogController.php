@@ -66,23 +66,24 @@ class BlogController extends Controller
     }
 
     /**
-     * @Route("/tag/{name}", name="blog_posts_by_tag")
+     * @Route("/tag/{tag}", name="blog_posts_by_tag")
+     * @Template()
      */
-    public function postsByTagAction(Tag $tag)
+    public function postsByTagAction($tag)
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
-        $pm = $this->getPostManager()
-            ->getRepository()
-            ->getPublishedPostsByTagQuery($tag->getName());
+        $repository = $this->getPostManager()->getRepository();
 
-        $paginator = $this->createPaginator($query);
+        $paginator = $this->createPaginator($repository->getPublishedPostsByTagQuery($tag));
 
         if ($paginator->getTotalItemCount() == 0) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
         }
 
-        return $this->render('PSSBlogBundle:Blog:postsByTag.html.twig', array('paginator' => $paginator));
+        return array(
+            'paginator' => $paginator
+        );
     }
 
 

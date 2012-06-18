@@ -103,11 +103,4 @@ class PostRepository extends AbstractRepository
 
         return $query->getSingleResult();
     }
-
-
-
-    public function getPublishedPosts()
-    {
-        return $this->toCollection($this->getPublishedPostsQuery()->getResults());
-    }
 }
