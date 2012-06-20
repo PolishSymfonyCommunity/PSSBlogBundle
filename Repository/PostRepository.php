@@ -17,26 +17,46 @@ use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 use PSS\Bundle\BlogBundle\Entity\Post;
 
 
+# Exceptions
+use Doctrine\ORM\NoResultException;
+
+
+
 
 class PostRepository extends AbstractRepository
 {
+
+    /**
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    public function getPublished( $max = null )
+    {
+        $qb =  $this->createQueryBuilder("p")
+                    ->select('p,a')
+                    ->innerJoin('p.author', 'a')
+                    ->where('p.type = :type AND p.status = :status')
+                    ->orderBy('p.publishedAt', 'DESC');
+
+        if (is_numeric($max))
+        {
+            $qb->setMaxResults($limit);
+        }
+
+        $qb->setParameter('type', Post::TYPE_POST);
+        $qb->setParameter('status', Post::STATUS_PUBLISH);
+
+        return $qb;
+    }
 
     /**
      * @return Doctrine\ORM\Query
      */
     public function getPublishedPostsQuery()
     {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
-             INNER JOIN p.author a
-             WHERE p.type = :type AND p.status = :status
-             ORDER BY p.publishedAt DESC'
-        );
-
-        $query->setParameter('type', Post::TYPE_POST);
-        $query->setParameter('status', Post::STATUS_PUBLISH);
-
-        return $query;
+        $qb = $this->getPublished();
+        $qb->setParameter('type', Post::TYPE_POST);
+        $qb->setParameter('status', Post::STATUS_PUBLISH);
+        return $qb->getQuery();
     }
 
 
