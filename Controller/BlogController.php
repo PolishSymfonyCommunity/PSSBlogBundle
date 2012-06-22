@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 # Entities
 use PSS\Bundle\BlogBundle\Entity\Post;
-use PSS\Bundle\BlogBundle\Entity\Tag;
+use PSS\Bundle\BlogBundle\Entity\Term;
 
 
 
@@ -65,17 +65,19 @@ class BlogController extends Controller
         );
     }
 
+
     /**
-     * @Route("/tag/{tag}", name="blog_posts_by_tag")
+     * @Route("/tag/{slug}", name="blog_posts_by_tag")
      * @Template()
      */
-    public function postsByTagAction($tag)
+    public function postsByTagAction(Term $term)
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $pm = $this->getPostManager();
+        $repository = $pm->getRepository();
+        $query = $repository
+                        ->getPublishedByTerm($term);
 
-        $repository = $this->getPostManager()->getRepository();
-
-        $paginator = $this->createPaginator($repository->getPublishedPostsByTagQuery($tag));
+        $paginator = $this->createPaginator($query->getQuery());
 
         if ($paginator->getTotalItemCount() == 0) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Page Not Found');
@@ -85,7 +87,6 @@ class BlogController extends Controller
             'paginator' => $paginator
         );
     }
-
 
 
     public function recentPostsAction($max)

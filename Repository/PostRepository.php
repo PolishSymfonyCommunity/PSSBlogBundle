@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityRepository;
 # Entities
 use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 use PSS\Bundle\BlogBundle\Entity\Post;
+use PSS\Bundle\BlogBundle\TagCloud\TagInterface;
+use PSS\Bundle\BlogBundle\Entity\Term;
 
 
 # Exceptions
@@ -31,22 +33,45 @@ class PostRepository extends AbstractRepository
      */
     public function getPublished( $max = null )
     {
-        $qb =  $this->createQueryBuilder("p")
+        $this->qb =  $this->createQueryBuilder("p")
                     ->select('p,a')
                     ->innerJoin('p.author', 'a')
-                    ->where('p.type = :type AND p.status = :status')
+                    ->where('p.type = :type')
+                    ->andWhere('p.status = :status')
                     ->orderBy('p.publishedAt', 'DESC');
 
         if (is_numeric($max))
         {
-            $qb->setMaxResults($limit);
+            $this->qb->setMaxResults($max);
         }
 
-        $qb->setParameter('type', Post::TYPE_POST);
-        $qb->setParameter('status', Post::STATUS_PUBLISH);
+        $this->qb->setParameter('type', Post::TYPE_POST);
+        $this->qb->setParameter('status', Post::STATUS_PUBLISH);
 
-        return $qb;
+        return $this->qb;
     }
+
+
+
+
+
+    /**
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    public function getPublishedByTerm(Term $term=null)
+    {
+        $this->qb = $this->getPublished()
+                    ->innerJoin('p.termRelationships', 'tr')
+                    ->innerJoin('tr.termTaxonomy', 'tt')
+                    ->innerJoin('tt.term','t')
+                    ->andWhere('tt.taxonomy = :taxonomy')
+                    ->andWhere('t.slug = :slug');
+
+        $this->qb->setParameter('slug', $term->getSlug());
+        $this->qb->setParameter('taxonomy', TermTaxonomy::POST_TAG);
+
+        return $this->qb;
+    }    
 
     /**
      * @return Doctrine\ORM\Query
@@ -80,25 +105,10 @@ class PostRepository extends AbstractRepository
      */
     public function getPublishedPostsByTagQuery($tagSlug)
     {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p, a FROM PSS\Bundle\BlogBundle\Entity\Post p
-             INNER JOIN p.author a
-             INNER JOIN p.termRelationships tr
-             INNER JOIN tr.termTaxonomy tt
-             INNER JOIN tt.term t
-             WHERE p.type = :type
-               AND p.status = :status
-               AND tt.taxonomy = :taxonomy
-               AND t.slug = :slug
-             ORDER BY p.publishedAt DESC'
-        );
+        $this->qb = $this->getPublishedByTerm()
+					->setParameter('slug', $tagSlug);
 
-        $query->setParameter('type', Post::TYPE_POST);
-        $query->setParameter('status', Post::STATUS_PUBLISH);
-        $query->setParameter('slug', $tagSlug);
-        $query->setParameter('taxonomy', TermTaxonomy::POST_TAG);
-
-        return $query;
+        return $this->qb->getQuery();
     }
 
 

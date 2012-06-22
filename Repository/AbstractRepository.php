@@ -20,6 +20,8 @@ use \Doctrine\ORM\Query;
 
 abstract class AbstractRepository extends EntityRepository
 {
+    private $qb = null;
+
     /**
      * Use Doctrine Debug
      */
@@ -27,6 +29,7 @@ abstract class AbstractRepository extends EntityRepository
     {
         throw new \Exception('Debugging result:'.\Doctrine\Common\Util\Debug::dump($in));
     }
+
 
 
     /**
@@ -51,6 +54,19 @@ abstract class AbstractRepository extends EntityRepository
     }   
 
 
+
+    /**
+     * Convert Array to ArrayCollection
+     * 
+     * @return ArrayCollection
+     */
+    public function asCollection()
+    {
+        return $this->_toCollection($this->qb);
+    }
+
+
+
     /**
      * Return the first Entity class
      * 
@@ -64,6 +80,7 @@ abstract class AbstractRepository extends EntityRepository
     }
 
 
+
     /**
      * Convert a result Collection based on QueryBuilder
      * 
@@ -75,6 +92,7 @@ abstract class AbstractRepository extends EntityRepository
         $result = $qb->getQuery()->getResult();
         return $this->_toCollection($result);
     }
+
 
 
     protected function _toCollection($result)
