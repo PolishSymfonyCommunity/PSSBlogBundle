@@ -29,7 +29,7 @@ use PSS\Bundle\BlogBundle\Entity\Term;
  * is that you can extend as a Base, and alter the returned array()
  * that each method returns using parent::methodName();
  *
- * Cookbook in @PSSBlogBundle/Resources/doc/recipe-extending-blog-controller.md
+ * Cookbook in PSSBlogBundle/Resources/doc/recipe-extending-blog-controller.md
  * 
  * @Route("/blog")
  */

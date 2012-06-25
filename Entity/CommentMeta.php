@@ -2,7 +2,21 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
+
+
+
 
 /**
  * @ORM\Table(name="wp_commentmeta")
@@ -40,4 +54,74 @@ class CommentMeta
      * @ORM\Column(name="meta_value", type="text", nullable=true)
      */
     private $value;
+
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set key
+     *
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * Get key
+     *
+     * @return string 
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Set value
+     *
+     * @param text $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * Get value
+     *
+     * @return text 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\Comment $comment
+     */
+    public function setComment(\PSS\Bundle\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return PSS\Bundle\BlogBundle\Entity\Comment 
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
 }

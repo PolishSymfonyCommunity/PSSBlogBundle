@@ -2,16 +2,16 @@
 
 namespace PSS\Bundle\BlogBundle\Repository;
 
-# Symfony/Doctrine internal
+// Symfony/Doctrine internal
 
 
-# Specific
+// Specific
 
 
-# Domain objects
+// Domain objects
 
 
-# Entities
+// Entities
 
 
 

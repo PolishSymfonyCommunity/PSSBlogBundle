@@ -2,7 +2,21 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
+
+
+
 
 /**
  * @ORM\Table(name="wp_usermeta")
@@ -40,4 +54,74 @@ class UserMeta
      * @ORM\Column(name="meta_value", type="text", nullable=true)
      */
     private $value;
+
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set key
+     *
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * Get key
+     *
+     * @return string 
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Set value
+     *
+     * @param text $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * Get value
+     *
+     * @return text 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set user
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\User $user
+     */
+    public function setUser(\PSS\Bundle\BlogBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return PSS\Bundle\BlogBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

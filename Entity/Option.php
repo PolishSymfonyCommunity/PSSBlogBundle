@@ -2,7 +2,21 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
+
+
+
 
 /**
  * @ORM\Table(name="wp_options")
@@ -46,4 +60,94 @@ class Option
      * @ORM\Column(name="autoload", type="string", length=20, nullable=false)
      */
     private $autoload;
+
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set blogId
+     *
+     * @param integer $blogId
+     */
+    public function setBlogId($blogId)
+    {
+        $this->blogId = $blogId;
+    }
+
+    /**
+     * Get blogId
+     *
+     * @return integer 
+     */
+    public function getBlogId()
+    {
+        return $this->blogId;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set value
+     *
+     * @param text $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * Get value
+     *
+     * @return text 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set autoload
+     *
+     * @param string $autoload
+     */
+    public function setAutoload($autoload)
+    {
+        $this->autoload = $autoload;
+    }
+
+    /**
+     * Get autoload
+     *
+     * @return string 
+     */
+    public function getAutoload()
+    {
+        return $this->autoload;
+    }
 }

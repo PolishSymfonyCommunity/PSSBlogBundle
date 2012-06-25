@@ -2,24 +2,24 @@
 
 namespace PSS\Bundle\BlogBundle\Repository;
 
-# Symfony/Doctrine internal
+// Symfony/Doctrine internal
 use Doctrine\ORM\EntityRepository;
 
 
-# Specific
+// Specific
 
 
-# Domain objects
+// Domain objects
 
 
-# Entities
+// Entities
 use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
 use PSS\Bundle\BlogBundle\Entity\Post;
 use PSS\Bundle\BlogBundle\TagCloud\TagInterface;
 use PSS\Bundle\BlogBundle\Entity\Term;
 
 
-# Exceptions
+// Exceptions
 use Doctrine\ORM\NoResultException;
 
 

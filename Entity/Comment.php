@@ -2,7 +2,21 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
+
+
+
 
 /**
  * @ORM\Table(name="wp_comments")
@@ -126,4 +140,321 @@ class Comment
      * @ORM\JoinColumn(name="comment_ID", referencedColumnName="comment_id")
      */
     private $meta;
+
+
+
+    public function __construct()
+    {
+        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set authorName
+     *
+     * @param text $authorName
+     */
+    public function setAuthorName($authorName)
+    {
+        $this->authorName = $authorName;
+    }
+
+    /**
+     * Get authorName
+     *
+     * @return text 
+     */
+    public function getAuthorName()
+    {
+        return $this->authorName;
+    }
+
+    /**
+     * Set authorEmail
+     *
+     * @param string $authorEmail
+     */
+    public function setAuthorEmail($authorEmail)
+    {
+        $this->authorEmail = $authorEmail;
+    }
+
+    /**
+     * Get authorEmail
+     *
+     * @return string 
+     */
+    public function getAuthorEmail()
+    {
+        return $this->authorEmail;
+    }
+
+    /**
+     * Set authorUrl
+     *
+     * @param string $authorUrl
+     */
+    public function setAuthorUrl($authorUrl)
+    {
+        $this->authorUrl = $authorUrl;
+    }
+
+    /**
+     * Get authorUrl
+     *
+     * @return string 
+     */
+    public function getAuthorUrl()
+    {
+        return $this->authorUrl;
+    }
+
+    /**
+     * Set authorIp
+     *
+     * @param string $authorIp
+     */
+    public function setAuthorIp($authorIp)
+    {
+        $this->authorIp = $authorIp;
+    }
+
+    /**
+     * Get authorIp
+     *
+     * @return string 
+     */
+    public function getAuthorIp()
+    {
+        return $this->authorIp;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return datetime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set createdAtAsGmt
+     *
+     * @param datetime $createdAtAsGmt
+     */
+    public function setCreatedAtAsGmt($createdAtAsGmt)
+    {
+        $this->createdAtAsGmt = $createdAtAsGmt;
+    }
+
+    /**
+     * Get createdAtAsGmt
+     *
+     * @return datetime 
+     */
+    public function getCreatedAtAsGmt()
+    {
+        return $this->createdAtAsGmt;
+    }
+
+    /**
+     * Set content
+     *
+     * @param text $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * Get content
+     *
+     * @return text 
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set karma
+     *
+     * @param integer $karma
+     */
+    public function setKarma($karma)
+    {
+        $this->karma = $karma;
+    }
+
+    /**
+     * Get karma
+     *
+     * @return integer 
+     */
+    public function getKarma()
+    {
+        return $this->karma;
+    }
+
+    /**
+     * Set approved
+     *
+     * @param string $approved
+     */
+    public function setApproved($approved)
+    {
+        $this->approved = $approved;
+    }
+
+    /**
+     * Get approved
+     *
+     * @return string 
+     */
+    public function getApproved()
+    {
+        return $this->approved;
+    }
+
+    /**
+     * Set agent
+     *
+     * @param string $agent
+     */
+    public function setAgent($agent)
+    {
+        $this->agent = $agent;
+    }
+
+    /**
+     * Get agent
+     *
+     * @return string 
+     */
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set parentId
+     *
+     * @param bigint $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+    /**
+     * Get parentId
+     *
+     * @return bigint 
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * Set post
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\Post $post
+     */
+    public function setPost(\PSS\Bundle\BlogBundle\Entity\Post $post)
+    {
+        $this->post = $post;
+    }
+
+    /**
+     * Get post
+     *
+     * @return PSS\Bundle\BlogBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
+
+    /**
+     * Set user
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\User $user
+     */
+    public function setUser(\PSS\Bundle\BlogBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return PSS\Bundle\BlogBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Add meta
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\CommentMeta $meta
+     */
+    public function addCommentMeta(\PSS\Bundle\BlogBundle\Entity\CommentMeta $meta)
+    {
+        $this->meta[] = $meta;
+    }
+
+    /**
+     * Get meta
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
 }

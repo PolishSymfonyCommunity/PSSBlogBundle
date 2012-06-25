@@ -2,7 +2,21 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
+
+
+
 
 /**
  * @ORM\Table(name="wp_term_taxonomy")
@@ -88,5 +102,152 @@ class TermTaxonomy
     public function getPostCount()
     {
         return $this->count;
+    }
+
+
+    public function __construct()
+    {
+        $this->termRelationships = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set termId
+     *
+     * @param bigint $termId
+     */
+    public function setTermId($termId)
+    {
+        $this->termId = $termId;
+    }
+
+    /**
+     * Get termId
+     *
+     * @return bigint 
+     */
+    public function getTermId()
+    {
+        return $this->termId;
+    }
+
+    /**
+     * Set taxonomy
+     *
+     * @param string $taxonomy
+     */
+    public function setTaxonomy($taxonomy)
+    {
+        $this->taxonomy = $taxonomy;
+    }
+
+    /**
+     * Set description
+     *
+     * @param text $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get description
+     *
+     * @return text 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set parentId
+     *
+     * @param bigint $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+    /**
+     * Get parentId
+     *
+     * @return bigint 
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * Set count
+     *
+     * @param bigint $count
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+    }
+
+    /**
+     * Get count
+     *
+     * @return bigint 
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * Set term
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\Term $term
+     */
+    public function setTerm(\PSS\Bundle\BlogBundle\Entity\Term $term)
+    {
+        $this->term = $term;
+    }
+
+    /**
+     * Get term
+     *
+     * @return PSS\Bundle\BlogBundle\Entity\Term 
+     */
+    public function getTerm()
+    {
+        return $this->term;
+    }
+
+    /**
+     * Add termRelationships
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\TermRelationship $termRelationships
+     */
+    public function addTermRelationship(\PSS\Bundle\BlogBundle\Entity\TermRelationship $termRelationships)
+    {
+        $this->termRelationships[] = $termRelationships;
+    }
+
+    /**
+     * Get termRelationships
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTermRelationships()
+    {
+        return $this->termRelationships;
     }
 }

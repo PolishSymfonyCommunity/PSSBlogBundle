@@ -2,8 +2,22 @@
 
 namespace PSS\Bundle\BlogBundle\Entity;
 
+
+// Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+
+
+// Specific
+
+
+// Domain objects
+
+
+// Entities
 use PSS\Bundle\BlogBundle\Entity\TermTaxonomy;
+
+
+
 
 /**
  * @ORM\Table(name="wp_terms")
@@ -49,6 +63,7 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
      */
     private $termTaxonomies;
 
+
     /**
      * @return string
      */
@@ -56,6 +71,7 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
     {
         return $this->name;
     }
+
 
     /**
      * @return string
@@ -65,6 +81,7 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
         return $this->slug;
     }
 
+
     /**
      * @return integer
      */
@@ -72,6 +89,7 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
     {
         return $this->getPostCount();
     }
+
 
     /**
      * @return integer
@@ -82,6 +100,7 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
 
         return is_null($termTaxonomy) ? 0 : $termTaxonomy->getPostCount();
     }
+
 
     /**
      * @return PSS\Bundle\BlogBundle\Entity\TermTaxonomy
@@ -97,5 +116,88 @@ class Term implements \PSS\Bundle\BlogBundle\TagCloud\TagInterface
         }
 
         return null;
+    }
+
+
+    public function __construct()
+    {
+        $this->termTaxonomies = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Get id
+     *
+     * @return bigint 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+
+    /**
+     * Set group
+     *
+     * @param bigint $group
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+    }
+
+
+    /**
+     * Get group
+     *
+     * @return bigint 
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+
+    /**
+     * Add termTaxonomies
+     *
+     * @param PSS\Bundle\BlogBundle\Entity\TermTaxonomy $termTaxonomies
+     */
+    public function addTermTaxonomy(\PSS\Bundle\BlogBundle\Entity\TermTaxonomy $termTaxonomies)
+    {
+        $this->termTaxonomies[] = $termTaxonomies;
+    }
+
+
+    /**
+     * Get termTaxonomies
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTermTaxonomies()
+    {
+        return $this->termTaxonomies;
     }
 }
