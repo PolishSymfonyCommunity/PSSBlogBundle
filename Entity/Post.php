@@ -4,7 +4,8 @@ namespace PSS\Bundle\BlogBundle\Entity;
 
 
 // Symfony/Doctrine internal
-use Doctrine\ORM\Mapping as ORM;
+use \Doctrine\ORM\Mapping as ORM;
+use \Doctrine\Common\Collections\ArrayCollection;
 
 
 // Specific
@@ -314,9 +315,26 @@ class Post
 
     public function __construct()
     {
-        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->termRelationships = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->meta = new ArrayCollection();
+        $this->termRelationships = new ArrayCollection();
+    }
+
+
+    /**
+     * Get moderated comments
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getModeratedComments()
+    {
+        $approved = new ArrayCollection();
+        foreach ($this->comments as $comment) {
+            if ($comment->getApproved() === true) {
+                $approved[] = $comment;
+            }
+        }
+        return $approved;
     }
 
 
@@ -724,7 +742,7 @@ class Post
     /**
      * Get comments
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getComments()
     {
@@ -744,7 +762,7 @@ class Post
     /**
      * Get meta
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getMeta()
     {
@@ -764,7 +782,7 @@ class Post
     /**
      * Get termRelationships
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getTermRelationships()
     {

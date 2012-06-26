@@ -7,6 +7,7 @@ namespace PSS\Bundle\BlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 
 # Specific
@@ -36,6 +37,12 @@ use PSS\Bundle\BlogBundle\Entity\Term;
 class BlogController extends Controller
 {
 
+    protected function comment(Request $request, Post $post)
+    {
+#        try {
+#            $cmtMgr = $this->get('pss.blogbundle.manager.comment');
+#            $entity = $cmtMgr->entityFactory($request); // Setting the "always required" stuff
+    }
 
 
 
@@ -43,10 +50,11 @@ class BlogController extends Controller
      * @Route("/{year}/{month}/{slug}", name="blog_show")
      * @Template()
      */
-    public function showAction(Post $post)
+    public function showAction(Post $post, Request $request)
     {
         return array(
-            'post' => $post->onlyIfPublished()
+            'post' => $post->onlyIfPublished(),
+            'comment_form' => $this->comment($request,$post)
         );
     }
 

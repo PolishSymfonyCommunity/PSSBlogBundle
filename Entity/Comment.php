@@ -5,6 +5,9 @@ namespace PSS\Bundle\BlogBundle\Entity;
 
 // Symfony/Doctrine internal
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 // Specific
@@ -19,8 +22,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
+ * A Comment represent a note left by a visitor from the web.
+ * 
+ * Comment can be attached to either a Post or an other Comment.
+ *
+ * Comment needs to be validated by blog owner.
+ * 
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="wp_comments")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PSS\Bundle\BlogBundle\Repository\CommentRepository")
  */
 class Comment
 {
@@ -72,6 +82,8 @@ class Comment
     /**
      * @var datetime $createdAt
      *
+     * @Gedmo\Timestampable(on="create")
+     * @Assert\Type(type="\DateTime")
      * @ORM\Column(name="comment_date", type="datetime", nullable=false)
      */
     private $createdAt;
@@ -79,6 +91,8 @@ class Comment
     /**
      * @var datetime $createdAtAsGmt
      *
+     * @Gedmo\Timestampable(on="create")
+     * @Assert\Type(type="\DateTime")
      * @ORM\Column(name="comment_date_gmt", type="datetime", nullable=false)
      */
     private $createdAtAsGmt;
@@ -145,8 +159,9 @@ class Comment
 
     public function __construct()
     {
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->meta = new ArrayCollection();
     }
+
     
     /**
      * Get id
@@ -321,21 +336,21 @@ class Comment
     /**
      * Set approved
      *
-     * @param string $approved
+     * @param boolean $approved
      */
     public function setApproved($approved)
     {
-        $this->approved = $approved;
+        $this->approved = !! $approved;
     }
 
     /**
      * Get approved
      *
-     * @return string 
+     * @return boolean 
      */
     public function getApproved()
     {
-        return $this->approved;
+        return !! $this->approved;
     }
 
     /**
