@@ -36,15 +36,15 @@ use PSS\Bundle\BlogBundle\Entity\Term;
  */
 class BlogController extends Controller
 {
-
+    /**
+     * Generate a comment form and process
+     */
     protected function comment(Request $request, Post $post)
     {
 #        try {
 #            $cmtMgr = $this->get('pss.blogbundle.manager.comment');
 #            $entity = $cmtMgr->entityFactory($request); // Setting the "always required" stuff
     }
-
-
 
     /**
      * @Route("/{year}/{month}/{slug}", name="blog_show")
@@ -57,7 +57,6 @@ class BlogController extends Controller
             'comment_form' => $this->comment($request,$post)
         );
     }
-
 
     /**
      * @Route("/", name="blog_index")
@@ -72,7 +71,6 @@ class BlogController extends Controller
             'paginator' => $paginator
         );
     }
-
 
     /**
      * @Route("/tag/{slug}", name="blog_posts_by_tag")
@@ -95,7 +93,6 @@ class BlogController extends Controller
             'paginator' => $paginator
         );
     }
-
 
     public function recentPostsAction($max)
     {
@@ -121,8 +118,6 @@ class BlogController extends Controller
         return $this->render('PSSBlogBundle:Blog:tagCloud.html.twig', array('tagCloud' => $tagCloud));
     }
 
-
-
     /**
      * Access to Post Manager service
      * 
@@ -132,8 +127,6 @@ class BlogController extends Controller
     {
         return $this->get('pss.blog.manager.post');
     }
-
-
 
     /**
      * Create a paginator from a Query

@@ -10,13 +10,11 @@ services:
         tags:
             - { name: twig.extension }
 
-
     pss.blog.manager.entity.abstract:
         abstract: true
         arguments:
             dispatcher: '@event_dispatcher'
             em: '@doctrine.orm.entity_manager'
-
 
     pss.blog.manager.post:
         parent:  pss.blog.manager.entity.abstract

@@ -27,7 +27,6 @@ use Doctrine\ORM\NoResultException;
 
 class PostRepository extends AbstractRepository
 {
-
     /**
      * @return Doctrine\ORM\QueryBuilder
      */
@@ -50,10 +49,6 @@ class PostRepository extends AbstractRepository
 
         return $this->qb;
     }
-
-
-
-
 
     /**
      * @return Doctrine\ORM\QueryBuilder
@@ -84,8 +79,6 @@ class PostRepository extends AbstractRepository
         return $qb->getQuery();
     }
 
-
-
     /**
      * @param integer $max
      * @return PSS\Bundle\BlogBundle\Entity\Post
@@ -98,8 +91,6 @@ class PostRepository extends AbstractRepository
         return $query->getResult();
     }
 
-
-
     /**
      * @return Doctrine\ORM\Query
      */
@@ -110,8 +101,6 @@ class PostRepository extends AbstractRepository
 
         return $this->qb->getQuery();
     }
-
-
 
     /**
      * @param string $slug
