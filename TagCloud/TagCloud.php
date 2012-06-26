@@ -90,6 +90,8 @@ class TagCloud
 
         $this->weights = $weights;
 
+        shuffle($tags);
+
         foreach ($tags as $tag) {
             $this->addTag($tag);
         }
