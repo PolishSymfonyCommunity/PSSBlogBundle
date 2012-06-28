@@ -6,10 +6,13 @@ class ContentExtension extends \Twig_Extension
 {
     public function getFilters()
     {
+        //$hilighter = new \PSS\Bundle\BlogBundle\Twig\Extension\Hilighter();
+
         return array(
             'autop' => new \Twig_Filter_Method($this, 'autop'),
             'summarize' => new \Twig_Filter_Method($this, 'summarize'),
             'more'  => new \Twig_Filter_Method($this, 'cutToMoreTag')
+            //,'geshi', => new \Twig_Filter_Method($hilighter, 'main')
         );
     }
 

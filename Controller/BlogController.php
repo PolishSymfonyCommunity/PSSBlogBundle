@@ -90,7 +90,8 @@ class BlogController extends Controller
         }
 
         return array(
-            'paginator' => $paginator
+            'paginator' => $paginator,
+            'term'      => $term
         );
     }
 

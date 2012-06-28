@@ -69,6 +69,67 @@ class PostRepository extends AbstractRepository
     }    
 
     /**
+     * Get three last hilighted
+     */
+    public function getHilighted()
+    {
+        $slugs = array('Favourites','Linux');
+
+        $this->qb = $this->getPublished()
+                    ->innerJoin('p.termRelationships', 'tr')
+                    ->innerJoin('tr.termTaxonomy', 'tt')
+                    ->innerJoin('tt.term','t')
+                    ->andWhere('tt.taxonomy = :taxonomy')
+                    ->andWhere($this->qb->expr()->in('t.slug',$slugs))
+                    ->orderBy('p.publishedAt','DESC');
+
+        $this->qb->setParameter('taxonomy', TermTaxonomy::POST_TAG);
+        $this->qb->setMaxResults(3);
+
+        return $this->qb;
+    }
+
+    /**
+     * Get a list of posts by Tag slug
+     *
+     * @param array $slugs  List of slugs to search in
+     * @param int   $max    Limit Max results
+     *
+     * @return QueryBuilder
+     */
+    public function getByTagSlugs(array $slugs,$max=3)
+    {
+        $this->qb = $this->getPublished()
+                    ->innerJoin('p.termRelationships', 'tr')
+                    ->innerJoin('tr.termTaxonomy', 'tt')
+                    ->innerJoin('tt.term','t')
+                    ->andWhere('tt.taxonomy = :taxonomy')
+                    ->andWhere($this->qb->expr()->in('t.slug',$slugs))
+                    ->orderBy('p.publishedAt','DESC');
+
+        $this->qb->setParameter('taxonomy', TermTaxonomy::POST_TAG);
+        $this->qb->setMaxResults($max);
+
+        return $this->qb;
+    }
+
+    /**
+     * Get a list of posts by Category slug 
+     *
+     * @param array $slugs  List of slugs to search in
+     * @param int   $max    Limit Max results
+     *
+     * @return QueryBuilder
+     */
+    public function getByCategorySlugs(array $slugs,$max=3)
+    {
+        $this->qb = $this->getByTagSlugs($slugs,$max);
+        $this->qb->setParameter('taxonomy', TermTaxonomy::CATEGORY);
+
+        return $this->qb;
+    }
+
+    /**
      * @return Doctrine\ORM\Query
      */
     public function getPublishedPostsQuery()
