@@ -30,7 +30,7 @@
         "behat/symfony2-extension":     "*",
         "behat/mink-extension":         "*",
         "behat/mink-browserkit-driver": "*",
-        "behat/common-contexts":        "*",
+        "behat/common-contexts":        "*@dev",
         "benwaine/phabric":             "*@dev"
     },
     "autoload": {
