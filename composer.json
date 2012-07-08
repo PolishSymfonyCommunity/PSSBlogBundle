@@ -21,7 +21,7 @@
         "symfony/symfony": "2.0.*",
         "doctrine/orm":    "2.1.*",
 
-        "sensio/framework-extra-bundle": "2.0.*",
+        "sensio/framework-extra-bundle": "2.0.*@dev",
         "knplabs/knp-paginator-bundle":  "*"
     },
     "require-dev": {
