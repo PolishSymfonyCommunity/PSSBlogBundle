@@ -10,7 +10,7 @@ before_script:
   - mysql -e 'CREATE DATABASE pss_blog_test;'
 
 script:
-  - 'phpunit --coverage-text && ./Features/Fixtures/Project/app/console -e=test --format=progress behat'
+  - 'phpunit --coverage-text && ./vendor/bin/behat'
 
 after_script:
   - mysql -e 'DROP DATABASE pss_blog_test;'
