@@ -21,7 +21,7 @@
         "symfony/symfony": "2.0.*",
         "doctrine/orm":    "2.1.*",
 
-        "sensio/framework-extra-bundle": "2.0.*",
+        "sensio/framework-extra-bundle": "2.0.*@dev",
         "knplabs/knp-paginator-bundle":  "*"
     },
     "require-dev": {
@@ -30,8 +30,8 @@
         "behat/symfony2-extension":     "*",
         "behat/mink-extension":         "*",
         "behat/mink-browserkit-driver": "*",
-        "behat/common-contexts":        "*",
-        "benwaine/phabric":             "*"
+        "behat/common-contexts":        "*@dev",
+        "benwaine/phabric":             "*@dev"
     },
     "autoload": {
         "psr-0": { "PSS\\Bundle\\BlogBundle": "" }
